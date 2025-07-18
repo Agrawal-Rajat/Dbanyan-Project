@@ -1,0 +1,105 @@
+This file contains a series of detailed, sequential prompts for `motif.ai` to generate the UI, page by page.
+
+#### **Prompt 1: The "Brand DNA" Foundation**
+
+**(This is the same detailed prompt as before, as it establishes the core aesthetic which we agreed upon. It will serve as the base for the following page-specific prompts.)**
+
+```
+**Prompt for: Dbanyan Group - Brand DNA & UI System**
+
+**Objective:** Generate a foundational UI design system for a premium, natural health brand named "Dbanyan Group." The brand's essence is purity, nature, trust, and calm confidence. The overall aesthetic should feel organic, clean, breathable, and modern.
+
+**1. Color Palette:**
+   - **Primary:** Deep Forest Green (`#2C5F2D`). Used for primary buttons, active links, and key headings.
+   - **Secondary/Background:** Pale Sage Green (`#97BC62FF`). A soft, muted green for card backgrounds, section backgrounds, and subtle highlights.
+   - **Accent:** Vibrant Amber (`#FFBF00`). Used exclusively for critical calls-to-action like "Add to Cart" and "Checkout Now" to create a powerful visual pop.
+   - **Neutral Palette:**
+     - Off-White (`#F5F5F5`) for main page backgrounds.
+     - Light Gray (`#E0E0E0`) for borders, dividers, and disabled states.
+     - Dark Charcoal (`#333333`) for all body text for high readability.
+
+**2. Typography:**
+   - **Headings (H1, H2, H3):** A modern, elegant serif font like "Lora" or "Merriweather". It should feel authoritative but gentle.
+   - **Body Text & UI Elements:** A clean, highly-readable sans-serif font like "Inter" or "Poppins". Prioritize clarity and spacing.
+
+**3. Core Components Style:**
+   - **Buttons:**
+     - **Primary:** Solid fill with the Primary Green. Subtle shadow on hover. Corners should be slightly rounded (4-6px radius) to feel friendly but structured.
+     - **Secondary:** Outlined with the Primary Green color, transparent background. Fills with color on hover.
+     - **Accent (CTA):** Solid fill with the Vibrant Amber color. Should have a slight "grow" transform on hover to draw attention.
+   - **Cards (Product Cards, etc.):**
+     - Use the Pale Sage Green or Off-White for the background.
+     - A very subtle, soft drop shadow to make them feel like they are gently floating above the background.
+     - Generous internal padding. Content should never touch the edges.
+     - Corner radius should match the buttons (4-6px).
+   - **Form Inputs (Text fields, dropdowns):**
+     - Minimalist design. A simple bottom border or a very light gray filled background.
+     - On focus, the border should illuminate with the Primary Green color.
+     - Labels should be placed outside the input field for clarity.
+
+**4. Overall Mood & Spacing:**
+   - **SPACIOUS & BREATHABLE.** Use significant white space (or rather, "off-white space") between sections and elements. The UI should not feel cramped. It should feel calm and easy to navigate.
+   - **Organic, Not Geometric:** Avoid sharp, 90-degree corners. The slight rounding on elements provides a more natural, tactile feel.
+   - **Trustworthy:** Visual hierarchy must be clear. The user should always know what is most important on the page. Use font weights and colors to guide their eye naturally.
+```
+
+#### **Enhanced Prompt 3: Educational Awareness Experience**
+
+```
+**Prompt for: Dbanyan Group - Interactive Educational Experience**
+
+**Objective:** Create a living, breathing educational experience that makes users excited about Moringa while showcasing 4 premium products. The design should feel energetic, sophisticated, and invite interaction - never dull or encyclopedic.
+
+**Core Philosophy:**
+- **ALIVE & ENERGETIC:** Every element should feel dynamic and invite interaction
+- **EDUCATIONAL BUT ENGAGING:** Transform learning into an exciting journey of discovery
+- **SOPHISTICATED SIMPLICITY:** Premium aesthetic with clean, breathable layouts
+- **RESPONSIVE PERFECTION:** Flawless experience across all screen sizes and zoom levels
+
+**Section 3: Interactive Benefits Education:**
+* **Layout:** Full-width section with dynamic grid layout (3 columns on desktop, responsive stacking)
+* **Header:** Large, elegant heading "The Science of Wellness" with animated progress indicators
+* **Interactive Cards:** Each benefit card features:
+  - Animated icons with hover effects
+  - Progress bars showing effectiveness percentages
+  - Expandable content revealing scientific facts
+  - Smooth micro-interactions on every element
+  - Color-coded categories (immune=forest green, energy=amber, brain=sage, etc.)
+* **Animation:** Staggered entrance animations, hover scale effects, smooth expand/collapse transitions
+* **Educational Elements:** Scientific facts, nutrient breakdowns, before/after comparisons
+
+**Section 4: Premium Product Showcase - "Crafted for Your Wellness":**
+* **Layout:** 4-column responsive grid with sophisticated card design
+* **Card Design Philosophy:**
+  - Glass morphism effects with subtle backdrop blur
+  - Elegant product imagery with organic shadows
+  - Interactive hover states revealing "View Details" overlay
+  - Star ratings with smooth animations
+  - Benefit tags with organic rounded styling
+  - Premium pricing display with subtle discount indicators
+* **Interactions:**
+  - Gentle scale transforms on hover (1.02x)
+  - Smooth overlay animations
+  - Micro-interactions on buttons and badges
+  - Responsive behavior that maintains elegance
+
+**Enhanced UX Requirements:**
+* **Responsive Excellence:** Perfect adaptation from mobile to ultra-wide displays
+* **Accessibility:** High contrast ratios, clear typography hierarchy
+* **Performance:** Optimized animations that don't compromise load times
+* **Engagement Metrics:** Elements designed to encourage exploration and interaction
+
+**Educational Integration:**
+* **Storytelling Flow:** Logical progression from awareness → education → products → action
+* **Visual Hierarchy:** Clear information architecture that guides the eye naturally
+* **Interactive Learning:** Click-to-explore elements that reward curiosity
+* **Social Proof:** Testimonials, scientific backing, and trust indicators woven throughout
+
+**Color Psychology Application:**
+* **Forest Green:** Authority, trust, natural health
+* **Sage Green:** Calm, balance, organic purity  
+* **Amber:** Energy, optimism, call-to-action
+* **Earth Tones:** Grounding, authenticity, premium quality
+
+This should create an experience where users think "This is exactly the kind of modern, trustworthy health brand I want to buy from" - professional yet approachable, educational yet exciting.
+```

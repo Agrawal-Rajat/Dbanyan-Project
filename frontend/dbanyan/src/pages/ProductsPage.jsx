@@ -1,0 +1,566 @@
+// Dbanyan Group - Products Listing Page
+// Implementing project_context.md Section 2.2: Products & Product Details Page
+// User Story: "As a potential customer, I want to see all available products"
+
+import React, { useState, useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { motion } from 'framer-motion';
+import { 
+  Container, 
+  Title, 
+  Text, 
+  Grid, 
+  Card, 
+  Button, 
+  Badge, 
+  Loader, 
+  Alert,
+  Select,
+  TextInput,
+  Group,
+  Stack
+} from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { useCartStore, useUIStore } from '../store';
+import { apiClient } from '../api';
+import CartIndicator from '../components/layout/CartIndicator';
+
+// Mock extended product data - will be replaced with real API
+const fetchAllProducts = async () => {
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  return [
+    {
+      id: 1,
+      name: 'Moringa Leaf Powder',
+      price: 299,
+      originalPrice: 349,
+      image: '/api/placeholder/400/400',
+      description: 'Pure, dried Moringa leaves ground to perfection. Rich in vitamins A, C, and E, plus essential minerals.',
+      category: 'Powder',
+      inStock: true,
+      quantity: 50,
+      rating: 4.8,
+      reviews: 124,
+      benefits: ['High in Vitamin C', 'Antioxidant Rich', 'Natural Energy Boost'],
+      weight: '100g'
+    },
+    {
+      id: 2,
+      name: 'Moringa Seeds Premium',
+      price: 399,
+      originalPrice: 449,
+      image: '/api/placeholder/400/400',
+      description: 'Premium quality Moringa seeds with natural detoxifying properties and high protein content.',
+      category: 'Seeds',
+      inStock: true,
+      quantity: 30,
+      rating: 4.6,
+      reviews: 89,
+      benefits: ['High Protein', 'Detoxifying', 'Healthy Fats'],
+      weight: '200g'
+    },
+    {
+      id: 3,
+      name: 'Moringa Oil Cold-Pressed',
+      price: 599,
+      originalPrice: 699,
+      image: '/api/placeholder/400/400',
+      description: 'Cold-pressed Moringa oil for skin and hair nourishment. 100% pure with no additives.',
+      category: 'Oil',
+      inStock: true,
+      quantity: 25,
+      rating: 4.9,
+      reviews: 156,
+      benefits: ['Skin Nourishment', 'Hair Care', 'Anti-Aging'],
+      weight: '50ml'
+    },
+    {
+      id: 4,
+      name: 'Moringa Tea Blend',
+      price: 249,
+      originalPrice: 299,
+      image: '/api/placeholder/400/400',
+      description: 'Soothing herbal tea blend with pure Moringa leaves and natural herbs for daily wellness.',
+      category: 'Tea',
+      inStock: false,
+      quantity: 0,
+      rating: 4.7,
+      reviews: 98,
+      benefits: ['Relaxing', 'Digestive Support', 'Antioxidants'],
+      weight: '50g'
+    },
+    {
+      id: 5,
+      name: 'Moringa Capsules',
+      price: 449,
+      originalPrice: 499,
+      image: '/api/placeholder/400/400',
+      description: 'Convenient Moringa leaf extract capsules for busy lifestyles. Easy to consume daily supplement.',
+      category: 'Capsules',
+      inStock: true,
+      quantity: 40,
+      rating: 4.5,
+      reviews: 67,
+      benefits: ['Convenient', 'Daily Supplement', 'Standardized Extract'],
+      weight: '60 capsules'
+    },
+    {
+      id: 6,
+      name: 'Moringa Face Cream',
+      price: 349,
+      originalPrice: 399,
+      image: '/api/placeholder/400/400',
+      description: 'Natural face cream infused with Moringa oil for healthy, glowing skin.',
+      category: 'Skincare',
+      inStock: true,
+      quantity: 15,
+      rating: 4.4,
+      reviews: 43,
+      benefits: ['Natural Glow', 'Hydrating', 'Anti-Aging'],
+      weight: '30g'
+    }
+  ];
+};
+
+const ProductsPage = () => {
+  const navigate = useNavigate();
+  const addToCart = useCartStore(state => state.addItem);
+  const addNotification = useUIStore(state => state.addNotification);
+  
+  // State for filtering and sorting
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('name');
+
+  // Fetch products using TanStack Query (Protocol 1.3)
+  const { data: products, isLoading, isError, error } = useQuery({
+    queryKey: ['products'],
+    queryFn: fetchAllProducts,
+  });
+
+  // Filter and sort products
+  const filteredProducts = useMemo(() => {
+    if (!products) return [];
+    
+    let filtered = products.filter(product => {
+      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           product.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+
+    // Sort products
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'price-low':
+          return a.price - b.price;
+        case 'price-high':
+          return b.price - a.price;
+        case 'rating':
+          return b.rating - a.rating;
+        case 'name':
+        default:
+          return a.name.localeCompare(b.name);
+      }
+    });
+
+    return filtered;
+  }, [products, searchTerm, selectedCategory, sortBy]);
+
+  // Get unique categories
+  const categories = useMemo(() => {
+    if (!products) return [];
+    const uniqueCategories = [...new Set(products.map(p => p.category))];
+    return [
+      { value: 'all', label: 'All Products' },
+      ...uniqueCategories.map(cat => ({ value: cat, label: cat }))
+    ];
+  }, [products]);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.4 }
+    }
+  };
+
+  const handleProductClick = (productId) => {
+    console.log('Product clicked:', productId);
+    console.log('Navigating to:', `/products/${productId}`);
+    navigate(`/products/${productId}`);
+  };
+
+  const handleAddToCart = (product, e) => {
+    e.stopPropagation();
+    if (product.inStock) {
+      try {
+        addToCart(product, 1);
+        addNotification({
+          title: 'Added to Cart',
+          message: `${product.name} has been added to your cart!`,
+          type: 'success'
+        });
+        console.log('Product added to cart:', product.name);
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        addNotification({
+          title: 'Error',
+          message: 'Failed to add item to cart. Please try again.',
+          type: 'error'
+        });
+      }
+    }
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Stack align="center" spacing="md">
+          <Loader size="lg" color="#2C5F2D" />
+          <Text style={{ fontFamily: '"Inter", sans-serif' }}>
+            Loading our premium Moringa products...
+          </Text>
+        </Stack>
+      </div>
+    );
+  }
+
+  // Error state
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Container size="sm">
+          <Alert color="red" title="Unable to load products">
+            {error?.message || 'Something went wrong. Please try again later.'}
+          </Alert>
+        </Container>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {/* SEO Meta Tags */}
+      <Helmet>
+        <title>Premium Moringa Products | Dbanyan Group | Natural Health Supplements</title>
+        <meta 
+          name="description" 
+          content="Discover our complete range of premium, preservative-free Moringa products. From leaf powder to oils, find the perfect natural health supplement for your wellness journey." 
+        />
+        <meta name="keywords" content="Moringa Products, Natural Supplements, Preservative-Free, Organic Health Products, Moringa Oil, Moringa Powder" />
+      </Helmet>
+
+      <main className="min-h-screen bg-gray-50 py-8">
+        <Container size="xl">
+          {/* Page Header */}
+          <div className="text-center mb-12">
+            <Title 
+              order={1} 
+              className="text-4xl lg:text-5xl font-bold mb-6"
+              style={{ 
+                fontFamily: '"Lora", serif',
+                color: '#2C5F2D'
+              }}
+            >
+              Our Premium Moringa Collection
+            </Title>
+            <Text 
+              size="xl" 
+              className="max-w-3xl mx-auto leading-relaxed mb-4"
+              style={{ 
+                fontFamily: '"Inter", sans-serif',
+                color: '#333333'
+              }}
+            >
+              Discover the complete range of our carefully crafted, preservative-free Moringa products. 
+              Each item is created with the highest quality standards to support your natural wellness journey.
+            </Text>
+            
+            {/* Debug button for testing */}
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => navigate('/test')}
+              style={{ borderColor: '#2C5F2D', color: '#2C5F2D' }}
+            >
+              🧪 Test Page (Debug)
+            </Button>
+          </div>
+
+          {/* Filters and Search */}
+          <Card className="mb-8 p-6" style={{ backgroundColor: 'white' }}>
+            <Group spacing="md" grow>
+              <TextInput
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{
+                  input: {
+                    borderColor: '#E0E0E0',
+                    '&:focus': { borderColor: '#2C5F2D' }
+                  }
+                }}
+              />
+              
+              <Select
+                placeholder="Category"
+                data={categories}
+                value={selectedCategory}
+                onChange={setSelectedCategory}
+                style={{
+                  input: {
+                    borderColor: '#E0E0E0',
+                    '&:focus': { borderColor: '#2C5F2D' }
+                  }
+                }}
+              />
+              
+              <Select
+                placeholder="Sort by"
+                data={[
+                  { value: 'name', label: 'Name (A-Z)' },
+                  { value: 'price-low', label: 'Price (Low to High)' },
+                  { value: 'price-high', label: 'Price (High to Low)' },
+                  { value: 'rating', label: 'Customer Rating' }
+                ]}
+                value={sortBy}
+                onChange={setSortBy}
+                style={{
+                  input: {
+                    borderColor: '#E0E0E0',
+                    '&:focus': { borderColor: '#2C5F2D' }
+                  }
+                }}
+              />
+            </Group>
+          </Card>
+
+          {/* Products Grid */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <Grid gutter="xl">
+              {filteredProducts.map((product) => (
+                <Grid.Col key={product.id} span={{ base: 12, sm: 6, lg: 4 }}>
+                  <motion.div variants={cardVariants}>
+                    <Card
+                      shadow="sm"
+                      padding="lg"
+                      radius="md"
+                      className="h-full cursor-pointer transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
+                      style={{ backgroundColor: 'white' }}
+                      onClick={() => handleProductClick(product.id)}
+                    >
+                      {/* Product Image */}
+                      <Card.Section>
+                        <div 
+                          className="h-64 bg-gradient-to-br from-green-200 to-green-300 flex items-center justify-center relative"
+                        >
+                          {/* Discount Badge */}
+                          {product.originalPrice > product.price && (
+                            <Badge
+                              className="absolute top-3 left-3 z-10"
+                              color="red"
+                              variant="filled"
+                            >
+                              {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                            </Badge>
+                          )}
+                          
+                          {/* Stock Status Badge */}
+                          <Badge
+                            className="absolute top-3 right-3 z-10"
+                            color={product.inStock ? 'green' : 'red'}
+                            variant="light"
+                          >
+                            {product.inStock ? 'In Stock' : 'Out of Stock'}
+                          </Badge>
+
+                          <Text size="sm" color="dimmed" style={{ fontFamily: '"Inter", sans-serif' }}>
+                            Product Image
+                          </Text>
+                        </div>
+                      </Card.Section>
+
+                      <Stack spacing="sm" className="mt-4">
+                        {/* Category & Weight */}
+                        <Group justify="space-between" align="flex-start">
+                          <Badge size="sm" color="blue" variant="light">
+                            {product.category}
+                          </Badge>
+                          <Text size="sm" color="dimmed" style={{ fontFamily: '"Inter", sans-serif' }}>
+                            {product.weight}
+                          </Text>
+                        </Group>
+
+                        {/* Product Name */}
+                        <Title 
+                          order={3} 
+                          size="h4"
+                          className="line-clamp-2"
+                          style={{ 
+                            fontFamily: '"Lora", serif',
+                            color: '#333333'
+                          }}
+                        >
+                          {product.name}
+                        </Title>
+
+                        {/* Rating & Reviews */}
+                        <Group spacing="xs">
+                          <Text 
+                            size="sm" 
+                            weight={600}
+                            style={{ color: '#FFBF00' }}
+                          >
+                            ★ {product.rating}
+                          </Text>
+                          <Text 
+                            size="sm" 
+                            color="dimmed"
+                            style={{ fontFamily: '"Inter", sans-serif' }}
+                          >
+                            ({product.reviews} reviews)
+                          </Text>
+                        </Group>
+
+                        {/* Description */}
+                        <Text 
+                          size="sm" 
+                          className="line-clamp-2"
+                          style={{ 
+                            fontFamily: '"Inter", sans-serif',
+                            color: '#333333'
+                          }}
+                        >
+                          {product.description}
+                        </Text>
+
+                        {/* Benefits */}
+                        <div className="flex flex-wrap gap-1">
+                          {product.benefits.slice(0, 2).map((benefit, index) => (
+                            <Badge
+                              key={index}
+                              size="xs"
+                              variant="outline"
+                              style={{ borderColor: '#2C5F2D', color: '#2C5F2D' }}
+                            >
+                              {benefit}
+                            </Badge>
+                          ))}
+                        </div>
+
+                        {/* No Preservatives Badge */}
+                        <Badge 
+                          color="yellow" 
+                          variant="filled"
+                          style={{ backgroundColor: '#FFBF00', color: '#333333' }}
+                        >
+                          No Preservatives
+                        </Badge>
+
+                        {/* Price */}
+                        <Group spacing="xs" align="center">
+                          <Text 
+                            size="xl" 
+                            weight={700}
+                            style={{ 
+                              fontFamily: '"Inter", sans-serif',
+                              color: '#2C5F2D'
+                            }}
+                          >
+                            ₹{product.price}
+                          </Text>
+                          {product.originalPrice > product.price && (
+                            <Text 
+                              size="md" 
+                              style={{ 
+                                textDecoration: 'line-through',
+                                color: '#999999',
+                                fontFamily: '"Inter", sans-serif'
+                              }}
+                            >
+                              ₹{product.originalPrice}
+                            </Text>
+                          )}
+                        </Group>
+
+                        {/* Action Buttons */}
+                        <Stack spacing="xs" className="mt-4">
+                          <Button
+                            fullWidth
+                            variant="outline"
+                            radius="md"
+                            style={{
+                              borderColor: '#2C5F2D',
+                              color: '#2C5F2D'
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleProductClick(product.id);
+                            }}
+                          >
+                            View Details
+                          </Button>
+                          
+                          <Button
+                            fullWidth
+                            radius="md"
+                            disabled={!product.inStock}
+                            style={{
+                              backgroundColor: product.inStock ? '#FFBF00' : '#E0E0E0',
+                              color: product.inStock ? '#333333' : '#999999'
+                            }}
+                            onClick={(e) => handleAddToCart(product, e)}
+                          >
+                            {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                          </Button>
+                        </Stack>
+                      </Stack>
+                    </Card>
+                  </motion.div>
+                </Grid.Col>
+              ))}
+            </Grid>
+          </motion.div>
+
+          {/* No Products Found */}
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-16">
+              <Text 
+                size="lg" 
+                style={{ 
+                  fontFamily: '"Inter", sans-serif',
+                  color: '#333333'
+                }}
+              >
+                No products found matching your criteria.
+              </Text>
+            </div>
+          )}
+        </Container>
+        
+        {/* Cart Indicator for testing */}
+        <CartIndicator />
+      </main>
+    </>
+  );
+};
+
+export default ProductsPage;

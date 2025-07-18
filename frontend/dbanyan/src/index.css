@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Dbanyan Brand Colors - From project_context.md Brand DNA */
+:root {
+  --primary-green: #2C5F2D;
+  --secondary-sage: #97BC62FF;
+  --accent-amber: #FFBF00;
+  --off-white: #F5F5F5;
+  --light-gray: #E0E0E0;
+  --dark-charcoal: #333333;
+}
+
+/* Global Typography - Brand DNA Implementation */
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--dark-charcoal);
+  background-color: var(--off-white);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Lora', serif;
+  color: var(--primary-green);
+}
