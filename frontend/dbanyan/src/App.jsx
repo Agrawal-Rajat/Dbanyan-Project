@@ -11,6 +11,7 @@ import ProductsPage from './pages/ProductsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import MoringaGuidePage from './pages/MoringaGuidePage';
 import CheckoutPage from './pages/CheckoutPage';
+import OrderSuccessPage from './pages/OrderSuccessPage';
 
 // Authentication Pages
 import LoginPage from './pages/LoginPage';
@@ -19,6 +20,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
 // Company Pages
 import AboutPage from './pages/AboutPage';
+import ProfilePage from './pages/ProfilePage';
 
 // Admin Pages
 import AdminDashboard from './pages/AdminDashboard';
@@ -70,6 +72,7 @@ function App() {
         
         {/* Checkout System */}
         <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/order-success" element={<OrderSuccessPage />} />
         
         {/* Educational Content */}
         <Route path="/moringa-guide" element={<MoringaGuidePage />} />
@@ -77,6 +80,7 @@ function App() {
         {/* Company Pages */}
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         
         {/* Catch-all route for 404 */}
         <Route path="*" element={

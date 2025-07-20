@@ -2,7 +2,7 @@
 # Implementing project_context.md Section 2.4: Cart & Checkout Flow
 # FR4.1-FR4.5: Complete checkout with Razorpay integration
 
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from motor.motor_asyncio import AsyncIOMotorDatabase
@@ -40,6 +40,35 @@ async def create_order(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to create order: {str(e)}"
+        )
+
+
+@router.post("/create-cod")
+async def create_cod_order(
+    order_data: OrderCreate,
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
+    """
+    Create Cash on Delivery order - FR4.4
+    Bypasses Razorpay integration for COD orders
+    """
+    try:
+        order_service = OrderService(db)
+        result = await order_service.create_cod_order(order_data)
+        
+        if not result["success"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=result["message"]
+            )
+        
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to create COD order: {str(e)}"
         )
 
 
@@ -166,4 +195,45 @@ async def update_order_status(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to update order status: {str(e)}"
+        )
+
+
+@router.get("/admin/all", response_model=List[Order])
+async def get_all_orders_admin(
+    skip: int = 0,
+    limit: int = 100,
+    status_filter: Optional[str] = None,
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
+    """
+    Get all orders for admin dashboard
+    TODO: Add admin authentication middleware
+    """
+    try:
+        order_service = OrderService(db)
+        orders = await order_service.get_all_orders_admin(skip, limit, status_filter)
+        return orders
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch orders: {str(e)}"
+        )
+
+
+@router.get("/admin/stats")
+async def get_order_stats_admin(
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
+    """
+    Get order statistics for admin dashboard
+    TODO: Add admin authentication middleware
+    """
+    try:
+        order_service = OrderService(db)
+        stats = await order_service.get_order_stats()
+        return stats
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch order stats: {str(e)}"
         )

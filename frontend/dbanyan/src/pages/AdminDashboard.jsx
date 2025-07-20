@@ -37,11 +37,14 @@ import {
   IconShoppingCart,
   IconTrendingUp,
   IconLogout,
-  IconSettings
+  IconSettings,
+  IconMail
 } from '@tabler/icons-react';
 import { useForm } from '@mantine/form';
 import { useAuthStore } from '../store';
-import { useProducts } from '../api';
+import { useProducts } from '../hooks/useProducts';
+import { api } from '../services/api';
+import { useQuery } from '@tanstack/react-query';
 import ModernNavBar from '../components/layout/ModernNavBar';
 
 const AdminDashboard = () => {
@@ -53,6 +56,34 @@ const AdminDashboard = () => {
 
   // API hooks
   const { data: products, isLoading, refetch } = useProducts();
+  const { data: orders, isLoading: ordersLoading } = useQuery({
+    queryKey: ['admin-orders'],
+    queryFn: async () => {
+      const response = await api.get('/orders/admin/all');
+      return response.data;
+    }
+  });
+  const { data: users, isLoading: usersLoading } = useQuery({
+    queryKey: ['admin-users'],
+    queryFn: async () => {
+      const response = await api.get('/auth/admin/users');
+      return response.data;
+    }
+  });
+  const { data: orderStats } = useQuery({
+    queryKey: ['admin-order-stats'],
+    queryFn: async () => {
+      const response = await api.get('/orders/admin/stats');
+      return response.data;
+    }
+  });
+  const { data: userStats } = useQuery({
+    queryKey: ['admin-user-stats'],
+    queryFn: async () => {
+      const response = await api.get('/auth/admin/stats');
+      return response.data;
+    }
+  });
 
   // Check if user is admin
   useEffect(() => {
@@ -130,29 +161,29 @@ const AdminDashboard = () => {
     navigate('/');
   };
 
-  // Mock stats data
+  // Calculate statistics from real data
   const stats = [
     { 
       title: 'Total Products', 
-      value: products?.data?.length || 4, 
+      value: products?.data?.length || 0, 
       icon: IconPackage, 
       color: 'blue' 
     },
     { 
       title: 'Total Orders', 
-      value: '142', 
+      value: orderStats?.total_orders || 0, 
       icon: IconShoppingCart, 
       color: 'green' 
     },
     { 
-      title: 'Total Customers', 
-      value: '89', 
+      title: 'Total Users', 
+      value: userStats?.total_users || 0, 
       icon: IconUsers, 
       color: 'violet' 
     },
     { 
       title: 'Revenue', 
-      value: '₹45,280', 
+      value: orderStats?.total_revenue ? `₹${orderStats.total_revenue.toFixed(2)}` : '₹0.00', 
       icon: IconTrendingUp, 
       color: 'orange' 
     }

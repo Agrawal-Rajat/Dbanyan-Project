@@ -78,8 +78,7 @@ const ModernLandingPage = () => {
         {/* Hero Section - Premium Design */}
         <ModernHeroSection />
 
-        {/* Company Mission & Quote - Life-changing narrative */}
-        <CompanyQuoteSection />
+
 
         {/* Modern Moringa Introduction - No white space */}
         <ModernMoringaSection />
@@ -90,6 +89,8 @@ const ModernLandingPage = () => {
         {/* Product Showcase - Modern grid */}
         <ModernProductsSection />
 
+        {/* Company Mission & Quote - Life-changing narrative */}
+        <CompanyQuoteSection />
         {/* Footer - Complete information */}
         <ModernFooter />
       </motion.main>

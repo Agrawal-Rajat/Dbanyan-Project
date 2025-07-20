@@ -2,7 +2,7 @@
 # Implementing JWT-based auth with admin and guest checkout flow
 
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from uuid import UUID
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
@@ -254,3 +254,65 @@ class AuthService:
         except Exception as e:
             logger.error(f"Error updating user profile: {e}")
             raise
+
+    async def get_all_users_admin(self, skip: int = 0, limit: int = 100) -> List[Dict]:
+        """Get all users for admin dashboard"""
+        try:
+            cursor = self.collection.find({}, {
+                "password_hash": 0  # Exclude password hash from results
+            }).skip(skip).limit(limit).sort("created_at", -1)
+            
+            users = []
+            async for user_doc in cursor:
+                # Convert UUID fields
+                user_doc['uid'] = str(user_doc['uid'])
+                users.append(user_doc)
+            
+            return users
+        except Exception as e:
+            logger.error(f"Error fetching admin users: {e}")
+            return []
+
+    async def get_user_stats(self) -> Dict[str, Any]:
+        """Get user statistics for admin dashboard"""
+        try:
+            # Total users
+            total_users = await self.collection.count_documents({})
+            
+            # Users by role
+            role_pipeline = [
+                {"$group": {"_id": "$role", "count": {"$sum": 1}}}
+            ]
+            role_stats = {}
+            async for result in self.collection.aggregate(role_pipeline):
+                role_stats[result["_id"]] = result["count"]
+            
+            # Recent users count
+            from datetime import datetime, timedelta
+            recent_date = datetime.utcnow() - timedelta(days=7)
+            recent_users = await self.collection.count_documents({
+                "created_at": {"$gte": recent_date}
+            })
+            
+            # Verified users count
+            verified_users = await self.collection.count_documents({
+                "email_verified": True
+            })
+            
+            return {
+                "total_users": total_users,
+                "role_distribution": role_stats,
+                "recent_users": recent_users,
+                "verified_users": verified_users,
+                "verification_rate": (verified_users / total_users * 100) if total_users > 0 else 0
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching user stats: {e}")
+            return {
+                "total_users": 0,
+                "role_distribution": {},
+                "recent_users": 0,
+                "verified_users": 0,
+                "verification_rate": 0
+            }

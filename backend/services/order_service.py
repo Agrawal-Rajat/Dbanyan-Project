@@ -119,6 +119,89 @@ class OrderService:
                 "message": f"Failed to create order: {str(e)}"
             }
     
+    async def create_cod_order(self, order_data: OrderCreate) -> Dict[str, Any]:
+        """
+        Create Cash on Delivery order - FR4.4
+        Bypasses Razorpay integration
+        """
+        try:
+            # 1. Validate stock availability - FR3.3
+            items_for_stock_check = [
+                {"product_uid": str(item.product_uid), "quantity": item.quantity}
+                for item in order_data.items
+            ]
+            
+            stock_check = await self.product_service.check_stock_availability(items_for_stock_check)
+            if not stock_check["available"]:
+                return {
+                    "success": False,
+                    "message": "Stock unavailable",
+                    "issues": stock_check["issues"]
+                }
+            
+            # 2. Calculate pricing
+            subtotal = sum(item.total_price for item in order_data.items)
+            discount_amount = Decimal('0.00')
+            
+            # Apply coupon if provided - FR4.3
+            if order_data.coupon_code:
+                coupon_service = CouponService(self.db)
+                discount_result = await coupon_service.apply_coupon(
+                    order_data.coupon_code, subtotal
+                )
+                if discount_result["valid"]:
+                    discount_amount = discount_result["discount_amount"]
+            
+            # Calculate final amounts
+            shipping_cost = self._calculate_shipping_cost(subtotal)
+            tax_amount = self._calculate_tax(subtotal - discount_amount)
+            total_amount = subtotal - discount_amount + shipping_cost + tax_amount
+            
+            # 3. Create order object (COD specific)
+            order = Order(
+                customer_email=order_data.customer_email,
+                items=order_data.items,
+                shipping_address=order_data.shipping_address,
+                subtotal=subtotal,
+                discount_amount=discount_amount,
+                shipping_cost=shipping_cost,
+                tax_amount=tax_amount,
+                total_amount=total_amount,
+                coupon_code=order_data.coupon_code,
+                notes=order_data.notes,
+                payment_status=PaymentStatus.PENDING,  # COD is pending until delivery
+                status=OrderStatus.CONFIRMED  # COD orders are auto-confirmed
+            )
+            
+            # 4. Save order to database
+            await self.collection.insert_one(order.model_dump(mode='json'))
+            
+            # 5. Decrement product quantities immediately for COD
+            items_for_decrement = [
+                {"product_uid": str(item.product_uid), "quantity": item.quantity}
+                for item in order.items
+            ]
+            
+            decrement_success = await self.product_service.decrement_product_quantities(items_for_decrement)
+            if not decrement_success:
+                logger.error(f"Failed to decrement quantities for COD order {order.uid}")
+            
+            logger.info(f"COD Order created: {order.uid}")
+            
+            return {
+                "success": True,
+                "message": "COD order created successfully",
+                "order_uid": str(order.uid),
+                "order": order
+            }
+            
+        except Exception as e:
+            logger.error(f"Error creating COD order: {e}")
+            return {
+                "success": False,
+                "message": f"Failed to create COD order: {str(e)}"
+            }
+    
     async def confirm_payment(self, payment_data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Confirm payment and update order status - FR4.5
@@ -278,6 +361,81 @@ class OrderService:
         except Exception as e:
             logger.error(f"Error verifying Razorpay signature: {e}")
             return False
+
+
+    async def get_all_orders_admin(self, skip: int = 0, limit: int = 100, status_filter: Optional[str] = None) -> List[Order]:
+        """Get all orders for admin dashboard"""
+        try:
+            filter_query = {}
+            if status_filter:
+                filter_query["status"] = status_filter
+            
+            cursor = self.collection.find(filter_query).skip(skip).limit(limit).sort("created_at", -1)
+            orders = []
+            
+            async for order_doc in cursor:
+                order_doc['uid'] = UUID(order_doc['uid'])
+                orders.append(Order(**order_doc))
+            
+            return orders
+        except Exception as e:
+            logger.error(f"Error fetching admin orders: {e}")
+            return []
+
+    async def get_order_stats(self) -> Dict[str, Any]:
+        """Get order statistics for admin dashboard"""
+        try:
+            # Total orders
+            total_orders = await self.collection.count_documents({})
+            
+            # Orders by status
+            status_pipeline = [
+                {"$group": {"_id": "$status", "count": {"$sum": 1}}}
+            ]
+            status_stats = {}
+            async for result in self.collection.aggregate(status_pipeline):
+                status_stats[result["_id"]] = result["count"]
+            
+            # Revenue stats
+            revenue_pipeline = [
+                {"$match": {"payment_status": "completed"}},
+                {"$group": {
+                    "_id": None,
+                    "total_revenue": {"$sum": "$total_amount"},
+                    "avg_order_value": {"$avg": "$total_amount"}
+                }}
+            ]
+            revenue_stats = {"total_revenue": 0, "avg_order_value": 0}
+            async for result in self.collection.aggregate(revenue_pipeline):
+                revenue_stats = {
+                    "total_revenue": float(result["total_revenue"]),
+                    "avg_order_value": float(result["avg_order_value"])
+                }
+            
+            # Recent orders count
+            from datetime import datetime, timedelta
+            recent_date = datetime.utcnow() - timedelta(days=7)
+            recent_orders = await self.collection.count_documents({
+                "created_at": {"$gte": recent_date}
+            })
+            
+            return {
+                "total_orders": total_orders,
+                "status_distribution": status_stats,
+                "total_revenue": revenue_stats["total_revenue"],
+                "avg_order_value": revenue_stats["avg_order_value"],
+                "recent_orders": recent_orders
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching order stats: {e}")
+            return {
+                "total_orders": 0,
+                "status_distribution": {},
+                "total_revenue": 0,
+                "avg_order_value": 0,
+                "recent_orders": 0
+            }
 
 
 # Import here to avoid circular imports

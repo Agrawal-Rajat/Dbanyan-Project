@@ -25,7 +25,8 @@ import {
   ActionIcon
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
-import { useCartStore, useUIStore } from '../store';
+import { useCartStore, useUIStore, useAuthStore } from '../store';
+import { paymentService } from '../services/paymentService';
 import { 
   IconShoppingCart, 
   IconTruck, 
@@ -49,6 +50,7 @@ import {
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const { items, total, removeItem, updateQuantity, clearCart } = useCartStore();
+  const { user } = useAuthStore();
   const addNotification = useUIStore(state => state.addNotification);
   
   const [activeStep, setActiveStep] = useState(0);
@@ -58,9 +60,9 @@ const CheckoutPage = () => {
   const [discount, setDiscount] = useState(0);
   
   const [customerInfo, setCustomerInfo] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
+    firstName: user?.full_name?.split(' ')[0] || '',
+    lastName: user?.full_name?.split(' ').slice(1).join(' ') || '',
+    email: user?.email || '',
     phone: '',
     address: '',
     city: '',
@@ -70,7 +72,7 @@ const CheckoutPage = () => {
   });
   
   const [deliveryOption, setDeliveryOption] = useState('standard');
-  const [paymentMethod, setPaymentMethod] = useState('razorpay');
+  const [paymentMethod, setPaymentMethod] = useState('upi');
 
   // Calculate totals
   const subtotal = total;
@@ -121,28 +123,87 @@ const CheckoutPage = () => {
   const handlePlaceOrder = async () => {
     setIsProcessing(true);
     
-    // Simulate order processing
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Clear cart and show success
-      clearCart();
-      addNotification({
-        title: 'Order Placed Successfully!',
-        message: `Order total: ₹${finalTotal}. You will receive a confirmation email shortly.`,
-        type: 'success'
-      });
-      
-      // Navigate to success page or home
-      navigate('/');
+      // Prepare order data
+      const orderData = {
+        customer_email: customerInfo.email,
+        items: items.map(item => ({
+          product_uid: item.id, // assuming item.id is the product UID
+          quantity: item.quantity,
+          price: item.price,
+          total_price: item.price * item.quantity
+        })),
+        shipping_address: {
+          first_name: customerInfo.firstName,
+          last_name: customerInfo.lastName,
+          email: customerInfo.email,
+          phone: customerInfo.phone,
+          address: customerInfo.address,
+          city: customerInfo.city,
+          state: customerInfo.state,
+          pincode: customerInfo.pincode,
+          landmark: customerInfo.landmark || ''
+        },
+        coupon_code: promoApplied ? promoCode : null,
+        notes: `Delivery: ${deliveryOption}, Payment: ${paymentMethod}`
+      };
+
+      if (paymentMethod === 'cod') {
+        // Handle Cash on Delivery
+        const result = await paymentService.processCODOrder(orderData);
+        
+        if (result.success) {
+          clearCart();
+          addNotification({
+            title: 'Order Placed Successfully!',
+            message: `Order #${result.order_uid}. You will receive a confirmation email shortly.`,
+            type: 'success'
+          });
+          navigate('/order-success');
+        } else {
+          throw new Error(result.message);
+        }
+      } else {
+        // Handle online payment
+        const orderResult = await paymentService.createOrder(orderData);
+        
+        if (orderResult.success) {
+          // Process online payment
+          await paymentService.processPayment(
+            orderResult,
+            paymentMethod,
+            customerInfo,
+            // Success callback
+            (paymentResult) => {
+              clearCart();
+              addNotification({
+                title: 'Payment Successful!',
+                message: `Order #${paymentResult.order_uid}. Thank you for your purchase!`,
+                type: 'success'
+              });
+              navigate('/order-success');
+            },
+            // Failure callback
+            (error) => {
+              addNotification({
+                title: 'Payment Failed',
+                message: error.message || 'There was an error processing your payment.',
+                type: 'error'
+              });
+              setIsProcessing(false);
+            }
+          );
+        } else {
+          throw new Error(orderResult.message);
+        }
+      }
       
     } catch (error) {
       addNotification({
         title: 'Order Failed',
-        message: 'There was an error processing your order. Please try again.',
+        message: error.message || 'There was an error processing your order. Please try again.',
         type: 'error'
       });
-    } finally {
       setIsProcessing(false);
     }
   };
@@ -539,28 +600,114 @@ const CheckoutPage = () => {
                           </Title>
                           
                           <Stack gap="sm">
+                            {/* UPI Payment */}
                             <Card 
                               className={`cursor-pointer border-2 transition-all ${
-                                paymentMethod === 'razorpay' 
+                                paymentMethod === 'upi' 
                                   ? 'border-green-500 bg-green-50' 
                                   : 'border-gray-200 hover:border-green-300'
                               }`}
-                              onClick={() => setPaymentMethod('razorpay')}
+                              onClick={() => setPaymentMethod('upi')}
                             >
-                              <Group gap="sm">
-                                <Radio 
-                                  checked={paymentMethod === 'razorpay'} 
-                                  onChange={() => setPaymentMethod('razorpay')}
-                                />
-                                <div>
-                                  <Text className="font-semibold">Online Payment</Text>
-                                  <Text size="sm" className="text-gray-600">
-                                    Credit/Debit Card, UPI, Net Banking
-                                  </Text>
-                                </div>
+                              <Group justify="space-between">
+                                <Group gap="sm">
+                                  <Radio 
+                                    checked={paymentMethod === 'upi'} 
+                                    onChange={() => setPaymentMethod('upi')}
+                                  />
+                                  <div>
+                                    <Group gap="xs">
+                                      <Text className="font-semibold">UPI Payment</Text>
+                                      <Badge size="xs" className="bg-green-100 text-green-700">Recommended</Badge>
+                                    </Group>
+                                    <Text size="sm" className="text-gray-600">
+                                      Google Pay, PhonePe, Paytm & more
+                                    </Text>
+                                  </div>
+                                </Group>
+                                <Text className="text-2xl">📱</Text>
+                              </Group>
+                            </Card>
+
+                            {/* Cards */}
+                            <Card 
+                              className={`cursor-pointer border-2 transition-all ${
+                                paymentMethod === 'card' 
+                                  ? 'border-green-500 bg-green-50' 
+                                  : 'border-gray-200 hover:border-green-300'
+                              }`}
+                              onClick={() => setPaymentMethod('card')}
+                            >
+                              <Group justify="space-between">
+                                <Group gap="sm">
+                                  <Radio 
+                                    checked={paymentMethod === 'card'} 
+                                    onChange={() => setPaymentMethod('card')}
+                                  />
+                                  <div>
+                                    <Text className="font-semibold">Credit/Debit Cards</Text>
+                                    <Text size="sm" className="text-gray-600">
+                                      Visa, Mastercard, Rupay
+                                    </Text>
+                                  </div>
+                                </Group>
+                                <Text className="text-2xl">💳</Text>
+                              </Group>
+                            </Card>
+
+                            {/* Wallets */}
+                            <Card 
+                              className={`cursor-pointer border-2 transition-all ${
+                                paymentMethod === 'wallet' 
+                                  ? 'border-green-500 bg-green-50' 
+                                  : 'border-gray-200 hover:border-green-300'
+                              }`}
+                              onClick={() => setPaymentMethod('wallet')}
+                            >
+                              <Group justify="space-between">
+                                <Group gap="sm">
+                                  <Radio 
+                                    checked={paymentMethod === 'wallet'} 
+                                    onChange={() => setPaymentMethod('wallet')}
+                                  />
+                                  <div>
+                                    <Text className="font-semibold">Digital Wallets</Text>
+                                    <Text size="sm" className="text-gray-600">
+                                      Paytm, PhonePe, Amazon Pay
+                                    </Text>
+                                  </div>
+                                </Group>
+                                <Text className="text-2xl">👛</Text>
+                              </Group>
+                            </Card>
+
+                            {/* Net Banking */}
+                            <Card 
+                              className={`cursor-pointer border-2 transition-all ${
+                                paymentMethod === 'netbanking' 
+                                  ? 'border-green-500 bg-green-50' 
+                                  : 'border-gray-200 hover:border-green-300'
+                              }`}
+                              onClick={() => setPaymentMethod('netbanking')}
+                            >
+                              <Group justify="space-between">
+                                <Group gap="sm">
+                                  <Radio 
+                                    checked={paymentMethod === 'netbanking'} 
+                                    onChange={() => setPaymentMethod('netbanking')}
+                                  />
+                                  <div>
+                                    <Text className="font-semibold">Net Banking</Text>
+                                    <Text size="sm" className="text-gray-600">
+                                      All major banks supported
+                                    </Text>
+                                  </div>
+                                </Group>
+                                <Text className="text-2xl">🏦</Text>
                               </Group>
                             </Card>
                             
+                            {/* Cash on Delivery */}
                             <Card 
                               className={`cursor-pointer border-2 transition-all ${
                                 paymentMethod === 'cod' 
@@ -569,17 +716,20 @@ const CheckoutPage = () => {
                               }`}
                               onClick={() => setPaymentMethod('cod')}
                             >
-                              <Group gap="sm">
-                                <Radio 
-                                  checked={paymentMethod === 'cod'} 
-                                  onChange={() => setPaymentMethod('cod')}
-                                />
-                                <div>
-                                  <Text className="font-semibold">Cash on Delivery</Text>
-                                  <Text size="sm" className="text-gray-600">
-                                    Pay when you receive your order
-                                  </Text>
-                                </div>
+                              <Group justify="space-between">
+                                <Group gap="sm">
+                                  <Radio 
+                                    checked={paymentMethod === 'cod'} 
+                                    onChange={() => setPaymentMethod('cod')}
+                                  />
+                                  <div>
+                                    <Text className="font-semibold">Cash on Delivery</Text>
+                                    <Text size="sm" className="text-gray-600">
+                                      Pay when you receive your order
+                                    </Text>
+                                  </div>
+                                </Group>
+                                <Text className="text-2xl">💰</Text>
                               </Group>
                             </Card>
                           </Stack>
