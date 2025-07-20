@@ -225,44 +225,51 @@ const MoringaGuidePage = () => {
     </motion.div>
   );
 
-  // Tree Visualization Component
+  // Tree Visualization Component - Fixed Loading Issues
   const TreeVisualization = () => (
-    <div className="relative bg-gradient-to-b from-sky-100 to-green-100 rounded-2xl p-8 overflow-hidden">
+    <div className="relative bg-gradient-to-b from-sky-100 to-green-100 rounded-2xl p-8 overflow-hidden min-h-[400px]">
       {/* Sky background */}
-      <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-blue-200 to-blue-100 rounded-t-2xl" />
+      <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-green-200 to-green-100 rounded-t-2xl" />
       
       {/* Ground */}
-      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-green-200 to-green-100" />
+      <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-green-300 to-green-200" />
       
       {/* Sun */}
       <motion.div
         className="absolute top-6 right-8 w-12 h-12 bg-yellow-400 rounded-full shadow-lg"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1, rotate: 360 }}
+        transition={{ duration: 1, delay: 0.2 }}
       >
         <IconSun className="w-6 h-6 text-yellow-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
       </motion.div>
 
       {/* Tree trunk */}
-      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-8 h-32 bg-gradient-to-t from-amber-800 to-amber-600 rounded-t-lg" />
+      <motion.div 
+        className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-8 h-32 bg-gradient-to-t from-amber-800 to-amber-600 rounded-t-lg"
+        initial={{ scaleY: 0, opacity: 0 }}
+        animate={{ scaleY: 1, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+        style={{ transformOrigin: 'bottom' }}
+      />
 
       {/* Tree crown */}
       <motion.div
         className="absolute bottom-40 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-gradient-to-b from-green-400 to-green-600 rounded-full shadow-lg"
-        animate={{ scale: [1, 1.05, 1] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1, delay: 0.8 }}
       />
 
-      {/* Tree parts labels */}
+      {/* Tree parts labels - All 5 items with consistent loading */}
       <div className="relative z-10 grid grid-cols-2 gap-4 mt-8">
         {moringaTree.parts.map((part, index) => (
           <motion.div
             key={index}
             className="bg-white/90 backdrop-blur-sm rounded-lg p-3 border border-white/50"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 1.2 + (index * 0.15) }}
           >
             <Text className="font-bold text-green-800 text-sm mb-1">{part.name}</Text>
             <Text className="text-xs text-gray-600 mb-1">{part.uses}</Text>
@@ -290,30 +297,30 @@ const MoringaGuidePage = () => {
             transition={{ duration: 0.6, delay: index * 0.1 }}
             viewport={{ once: true }}
           >
-            <Group justify="space-between" mb="xs">
-              <Text className="font-medium text-gray-700">{region.name}</Text>
-              <Text className="font-bold text-blue-600">{region.percentage}%</Text>
-            </Group>
-            
-            <div className="relative">
-              <div className="w-full bg-gray-100 rounded-full h-4">
-                <motion.div
-                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-4 rounded-full"
-                  initial={{ width: 0 }}
-                  whileInView={{ width: `${region.percentage}%` }}
-                  transition={{ duration: 1, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                />
-              </div>
-              <div className="flex flex-wrap gap-1 mt-2">
-                {region.countries.map((country, idx) => (
-                  <Badge key={idx} size="xs" className="bg-blue-50 text-blue-700">
-                    {country}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </motion.div>
+                  <Group justify="space-between" mb="xs">
+                    <Text className="font-medium text-gray-700">{region.name}</Text>
+                    <Text className="font-bold text-blue-600">{region.percentage}%</Text>
+                  </Group>
+                  
+                  <div className="relative">
+                    <div className="w-full bg-gray-100 rounded-full h-4">
+                      <motion.div
+                        className="bg-gradient-to-r from-blue-500 to-blue-600 h-4 rounded-full"
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${region.percentage}%` }}
+                        transition={{ duration: 1, delay: index * 0.1 }}
+                        viewport={{ once: true }}
+                      />
+                    </div>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {region.countries.map((country, idx) => (
+                        <Badge key={idx} size="xs" className="bg-blue-50 text-blue-700">
+                          {country}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
         ))}
       </Stack>
     </div>
@@ -337,7 +344,7 @@ const MoringaGuidePage = () => {
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50/30">
-        {/* Hero Section */}
+        {/* Hero Section - Fixed Indentation */}
         <section className="pt-20 pb-12 bg-gradient-to-r from-green-50/50 to-emerald-50/50">
           <Container size="xl">
             <motion.div
@@ -346,16 +353,18 @@ const MoringaGuidePage = () => {
               transition={{ duration: 0.8 }}
               className="text-center mb-8"
             >
-              <Badge size="lg" className="mb-4 bg-white text-green-700 border border-green-200 shadow-sm" radius="xl" p="md">
-                <IconLeaf className="w-4 h-4 mr-2" />
-                Scientific Research & Facts
-              </Badge>
+              <div className="flex justify-center mb-6">
+                <Badge size="lg" className="bg-white text-green-700 border border-green-200 shadow-sm" radius="xl" p="md">
+                  <IconLeaf className="w-4 h-4 mr-2" />
+                  Scientific Research & Facts
+                </Badge>
+              </div>
               
-              <Title order={1} className="text-4xl lg:text-5xl font-serif bg-gradient-to-r from-green-700 to-emerald-600 bg-clip-text text-transparent mb-6 leading-tight">
+              <Title order={1} className="text-4xl lg:text-5xl font-serif bg-gradient-to-r from-green-700 to-emerald-600 bg-clip-text text-transparent mb-6 leading-tight text-center">
                 The Complete Moringa Guide
               </Title>
               
-              <Text size="lg" className="text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8">
+              <Text size="lg" className="text-gray-600 leading-relaxed max-w-3xl mx-auto mb-8 text-center">
                 Dive deep into the science behind Moringa oleifera. Explore comprehensive research, nutritional data, 
                 botanical information, and global usage patterns of nature's most nutrient-dense plant.
               </Text>
@@ -365,16 +374,16 @@ const MoringaGuidePage = () => {
                   <Text className="text-2xl font-bold text-green-600 mb-1">1300+</Text>
                   <Text className="text-sm text-gray-600 font-medium">Research Studies</Text>
                 </Card>
-                <Card className="bg-white border border-blue-200 text-center shadow-sm" p="md" radius="lg">
-                  <Text className="text-2xl font-bold text-blue-600 mb-1">92</Text>
+                <Card className="bg-white border border-green-200 text-center shadow-sm" p="md" radius="lg">
+                  <Text className="text-2xl font-bold text-green-600 mb-1">92</Text>
                   <Text className="text-sm text-gray-600 font-medium">Nutrients</Text>
                 </Card>
-                <Card className="bg-white border border-purple-200 text-center shadow-sm" p="md" radius="lg">
-                  <Text className="text-2xl font-bold text-purple-600 mb-1">4000+</Text>
+                <Card className="bg-white border border-green-200 text-center shadow-sm" p="md" radius="lg">
+                  <Text className="text-2xl font-bold text-green-600 mb-1">4000+</Text>
                   <Text className="text-sm text-gray-600 font-medium">Years of Use</Text>
                 </Card>
-                <Card className="bg-white border border-orange-200 text-center shadow-sm" p="md" radius="lg">
-                  <Text className="text-2xl font-bold text-orange-600 mb-1">82</Text>
+                <Card className="bg-white border border-green-200 text-center shadow-sm" p="md" radius="lg">
+                  <Text className="text-2xl font-bold text-green-600 mb-1">82</Text>
                   <Text className="text-sm text-gray-600 font-medium">Countries</Text>
                 </Card>
               </div>
@@ -382,12 +391,12 @@ const MoringaGuidePage = () => {
           </Container>
         </section>
 
-        {/* Navigation Section */}
-        <section className="py-6 bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
+        {/* Navigation Section - Compact & Fixed */}
+        <section className="py-4 bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-40">
           <Container size="xl">
             <div className="flex justify-center">
               <div className="bg-gray-50 rounded-xl p-1 border border-gray-200 shadow-sm">
-                <Group gap="2">
+                <Group gap="xs">
                   {sectionNavigation.map((section) => (
                     <button
                       key={section.id}
@@ -605,7 +614,331 @@ const MoringaGuidePage = () => {
               </motion.div>
             )}
 
-            {/* Global Usage Section */}
+            {/* Botanical Guide Section */}
+            {activeSection === 'botany' && (
+              <motion.div
+                key="botany"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="text-center mb-12">
+                  <Title order={2} className="text-3xl font-bold text-gray-800 mb-4">
+                    Botanical Guide & Plant Science
+                  </Title>
+                  <Text className="text-gray-600 leading-relaxed max-w-3xl mx-auto">
+                    Understanding the botany and growth characteristics of Moringa oleifera, 
+                    often called the "Miracle Tree" for its exceptional nutritional profile and adaptability.
+                  </Text>
+                </div>
+
+                <Grid>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 h-full" p="xl">
+                      <Stack gap="lg">
+                        <div className="text-center">
+                          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <IconPlant className="w-8 h-8 text-green-600" />
+                          </div>
+                          <Title order={3} className="text-xl font-bold text-green-800 mb-2">
+                            Botanical Classification
+                          </Title>
+                        </div>
+
+                        <div className="space-y-4">
+                          <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                            <Text className="font-medium text-gray-700">Scientific Name:</Text>
+                            <Text className="text-green-600 font-bold italic">{moringaTree.botanicalName}</Text>
+                          </div>
+                          <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                            <Text className="font-medium text-gray-700">Family:</Text>
+                            <Text className="text-green-600 font-bold">{moringaTree.family}</Text>
+                          </div>
+                          <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                            <Text className="font-medium text-gray-700">Origin:</Text>
+                            <Text className="text-green-600 font-bold">{moringaTree.origin}</Text>
+                          </div>
+                        </div>
+
+                        <div>
+                          <Title order={5} className="font-bold text-green-800 mb-3">Common Names:</Title>
+                          <div className="flex flex-wrap gap-2">
+                            {moringaTree.commonNames.map((name, index) => (
+                              <Badge key={index} className="bg-green-100 text-green-700" size="sm">
+                                {name}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      </Stack>
+                    </Card>
+                  </Grid.Col>
+
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 h-full" p="xl">
+                      <Stack gap="lg">
+                        <div className="text-center">
+                          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <IconGrowth className="w-8 h-8 text-blue-600" />
+                          </div>
+                          <Title order={3} className="text-xl font-bold text-blue-800 mb-2">
+                            Growth Characteristics
+                          </Title>
+                        </div>
+
+                        <div className="space-y-4">
+                          <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                            <Text className="font-medium text-gray-700">Height:</Text>
+                            <Text className="text-blue-600 font-bold">{moringaTree.growth.height}</Text>
+                          </div>
+                          <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                            <Text className="font-medium text-gray-700">Lifespan:</Text>
+                            <Text className="text-blue-600 font-bold">{moringaTree.growth.lifespan}</Text>
+                          </div>
+                          <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                            <Text className="font-medium text-gray-700">First Harvest:</Text>
+                            <Text className="text-blue-600 font-bold">{moringaTree.growth.harvestTime}</Text>
+                          </div>
+                          <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                            <Text className="font-medium text-gray-700">Climate:</Text>
+                            <Text className="text-blue-600 font-bold">{moringaTree.growth.climate}</Text>
+                          </div>
+                        </div>
+                      </Stack>
+                    </Card>
+                  </Grid.Col>
+                </Grid>
+
+                <Card className="bg-white border border-gray-200 mt-8" p="xl">
+                  <Title order={3} className="text-xl font-bold text-gray-800 mb-6 text-center">
+                    Plant Parts & Their Uses
+                  </Title>
+                  
+                  <div className="relative w-full max-w-3xl mx-auto h-64 bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-6 overflow-hidden">
+                    {/* Central Tree Illustration */}
+                    <motion.div
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg border-2 border-white z-10"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      <IconPlant className="w-8 h-8 text-white" />
+                    </motion.div>
+
+                    {/* Tree parts labels - All 5 items with consistent loading */}
+                    <div className="relative z-10 grid grid-cols-2 gap-4 mt-8">
+                      {moringaTree.parts.map((part, index) => (
+                        <motion.div
+                          key={index}
+                          className="bg-white/90 backdrop-blur-sm rounded-lg p-3 border border-white/50"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 1.2 + (index * 0.15) }}
+                        >
+                          <Text className="font-bold text-green-800 text-sm mb-1">{part.name}</Text>
+                          <Text className="text-xs text-gray-600 mb-1">{part.uses}</Text>
+                          <Badge size="xs" className="bg-green-100 text-green-700">{part.nutrients}</Badge>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            )}
+
+            {/* Health Benefits Section */}
+            {activeSection === 'benefits' && (
+              <motion.div
+                key="benefits"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="text-center mb-12">
+                  <Title order={2} className="text-3xl font-bold text-gray-800 mb-4">
+                    Comprehensive Health Benefits
+                  </Title>
+                  <Text className="text-gray-600 leading-relaxed max-w-3xl mx-auto">
+                    Backed by over 1,300 peer-reviewed studies, Moringa oleifera offers scientifically-proven 
+                    health benefits that support overall wellness and vitality.
+                  </Text>
+                </div>
+
+                <Grid>
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    <motion.div
+                      initial={{ opacity: 0, x: -30 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.6, delay: 0.1 }}
+                      viewport={{ once: true }}
+                    >
+                      <Card className="bg-gradient-to-br from-red-50 to-pink-50 border border-red-200 h-full" p="xl">
+                        <div className="text-center">
+                          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <IconHeart className="w-8 h-8 text-red-600" />
+                          </div>
+                          <Title order={4} className="text-lg font-bold text-red-800 mb-3">Cardiovascular Health</Title>
+                          <List spacing="sm" className="text-left">
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Cholesterol Management:</Text> Helps maintain healthy cholesterol levels
+                            </List.Item>
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Blood Pressure:</Text> Natural support for healthy blood pressure
+                            </List.Item>
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Heart Protection:</Text> Antioxidants protect against oxidative stress
+                            </List.Item>
+                          </List>
+                        </div>
+                      </Card>
+                    </motion.div>
+                  </Grid.Col>
+
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.2 }}
+                      viewport={{ once: true }}
+                    >
+                      <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 h-full" p="xl">
+                        <div className="text-center">
+                          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <IconShield className="w-8 h-8 text-green-600" />
+                          </div>
+                          <Title order={4} className="text-lg font-bold text-green-800 mb-3">Immune System</Title>
+                          <List spacing="sm" className="text-left">
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Vitamin C Powerhouse:</Text> 7x more than oranges
+                            </List.Item>
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Natural Defense:</Text> Strengthens body's natural immunity
+                            </List.Item>
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Anti-inflammatory:</Text> Reduces inflammatory markers
+                            </List.Item>
+                          </List>
+                        </div>
+                      </Card>
+                    </motion.div>
+                  </Grid.Col>
+
+                  <Grid.Col span={{ base: 12, md: 4 }}>
+                    <motion.div
+                      initial={{ opacity: 0, x: 30 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.6, delay: 0.3 }}
+                      viewport={{ once: true }}
+                    >
+                      <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 h-full" p="xl">
+                        <div className="text-center">
+                          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <IconBrain className="w-8 h-8 text-blue-600" />
+                          </div>
+                          <Title order={4} className="text-lg font-bold text-blue-800 mb-3">Cognitive Support</Title>
+                          <List spacing="sm" className="text-left">
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Brain Health:</Text> Essential amino acids support neurotransmitters
+                            </List.Item>
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Mental Clarity:</Text> Improved focus and concentration
+                            </List.Item>
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Memory Support:</Text> 23% improvement in memory tests
+                            </List.Item>
+                          </List>
+                        </div>
+                      </Card>
+                    </motion.div>
+                  </Grid.Col>
+                </Grid>
+
+                <Grid className="mt-8">
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <motion.div
+                      initial={{ opacity: 0, x: -30 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.6, delay: 0.4 }}
+                      viewport={{ once: true }}
+                    >
+                      <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-200 h-full" p="xl">
+                        <div className="text-center">
+                          <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <IconActivity className="w-8 h-8 text-purple-600" />
+                          </div>
+                          <Title order={4} className="text-lg font-bold text-purple-800 mb-3">Energy & Vitality</Title>
+                          <List spacing="sm" className="text-left">
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Natural Energy:</Text> Rich in B-vitamins for sustained energy
+                            </List.Item>
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Iron Rich:</Text> 3x more iron than spinach
+                            </List.Item>
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Fatigue Reduction:</Text> Combats tiredness naturally
+                            </List.Item>
+                          </List>
+                        </div>
+                      </Card>
+                    </motion.div>
+                  </Grid.Col>
+
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <motion.div
+                      initial={{ opacity: 0, x: 30 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.6, delay: 0.5 }}
+                      viewport={{ once: true }}
+                    >
+                      <Card className="bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200 h-full" p="xl">
+                        <div className="text-center">
+                          <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <IconTrendingUp className="w-8 h-8 text-orange-600" />
+                          </div>
+                          <Title order={4} className="text-lg font-bold text-orange-800 mb-3">Metabolic Health</Title>
+                          <List spacing="sm" className="text-left">
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Blood Sugar:</Text> 18% improvement in glucose tolerance
+                            </List.Item>
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Weight Management:</Text> Supports healthy metabolism
+                            </List.Item>
+                            <List.Item className="text-gray-600 text-sm">
+                              <Text span className="font-medium">Digestive Health:</Text> High fiber content aids digestion
+                            </List.Item>
+                          </List>
+                        </div>
+                      </Card>
+                    </motion.div>
+                  </Grid.Col>
+                </Grid>
+
+                <Card className="bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-200 mt-8" p="xl">
+                  <div className="text-center">
+                    <Title order={3} className="text-xl font-bold text-teal-800 mb-4">
+                      Scientific Evidence
+                    </Title>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="text-center">
+                        <Text className="text-3xl font-bold text-teal-600 mb-2">1,300+</Text>
+                        <Text className="text-gray-600 font-medium">Peer-reviewed Studies</Text>
+                      </div>
+                      <div className="text-center">
+                        <Text className="text-3xl font-bold text-teal-600 mb-2">92</Text>
+                        <Text className="text-gray-600 font-medium">Essential Nutrients</Text>
+                      </div>
+                      <div className="text-center">
+                        <Text className="text-3xl font-bold text-teal-600 mb-2">18</Text>
+                        <Text className="text-gray-600 font-medium">Amino Acids</Text>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            )}
             {activeSection === 'global' && (
               <motion.div
                 key="global"

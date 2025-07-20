@@ -67,47 +67,76 @@ const OrganicHeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Organic Background Layers */}
-      <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-emerald-25 to-sage-50" 
-           style={{ 
-             background: 'linear-gradient(135deg, #F0F4F0 0%, #F5F8F5 40%, #F8FBF8 100%)'
-           }} 
-      />
+      {/* Enhanced Background with Video */}
+      <div className="absolute inset-0">
+        {/* Video Background */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster="https://images.unsplash.com/photo-1574482620911-95c56ac194b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
+        >
+          <source src="https://videos.pexels.com/video-files/6649839/6649839-hd_1920_1080_30fps.mp4" type="video/mp4" />
+          {/* Fallback background for browsers that don't support video */}
+        </video>
+        
+        {/* Primary background gradient overlay */}
+        <div 
+          className="absolute inset-0 z-10"
+          style={{ 
+            background: 'linear-gradient(135deg, rgba(240, 244, 240, 0.85) 0%, rgba(245, 248, 245, 0.7) 40%, rgba(248, 251, 248, 0.85) 100%)'
+          }} 
+        />
+        
+        {/* Enhanced overlay for better text readability */}
+        <div 
+          className="absolute inset-0 z-20"
+          style={{
+            background: 'linear-gradient(45deg, rgba(44, 95, 45, 0.15) 0%, rgba(151, 188, 98, 0.1) 50%, rgba(44, 95, 45, 0.05) 100%)'
+          }}
+        />
+      </div>
       
       {/* Organic Pattern Overlay */}
       <div 
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-30 z-30"
         style={{
           backgroundImage: `
-            radial-gradient(circle at 20% 30%, rgba(151, 188, 98, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 70%, rgba(44, 95, 45, 0.08) 0%, transparent 50%),
-            radial-gradient(circle at 60% 20%, rgba(151, 188, 98, 0.05) 0%, transparent 50%)
+            radial-gradient(circle at 20% 30%, rgba(151, 188, 98, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(44, 95, 45, 0.12) 0%, transparent 50%),
+            radial-gradient(circle at 60% 20%, rgba(151, 188, 98, 0.08) 0%, transparent 50%)
           `
         }}
       />
 
-      {/* Video Placeholder - For future implementation */}
-      <div className="absolute inset-0 opacity-30">
-        {/* This would be replaced with actual video element */}
-        <div 
-          className="w-full h-full bg-cover bg-center"
-          style={{
-            backgroundImage: 'url("/api/placeholder/1920/1080")',
-            filter: 'blur(1px) brightness(0.9)'
-          }}
-        />
+      {/* Floating particles for organic feel */}
+      <div className="absolute inset-0 z-40 pointer-events-none">
+        {[...Array(8)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-green-300 rounded-full opacity-40"
+            style={{
+              left: `${10 + i * 12}%`,
+              top: `${20 + (i % 3) * 25}%`,
+            }}
+            animate={{
+              y: [-10, 10, -10],
+              opacity: [0.2, 0.6, 0.2],
+              scale: [0.8, 1.2, 0.8]
+            }}
+            transition={{
+              duration: 3 + i * 0.5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
       </div>
 
-      {/* Dark Overlay for Text Readability */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(135deg, rgba(44, 95, 45, 0.15) 0%, rgba(44, 95, 45, 0.05) 100%)'
-        }}
-      />
-
       {/* Hero Content */}
-      <Container size="xl" className="relative z-10">
+      <Container size="xl" className="relative z-50">
         <motion.div
           variants={containerVariants}
           initial="initial"

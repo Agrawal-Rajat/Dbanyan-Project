@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 // Refined Sections
 import OrganicHeroSection from '../components/sections/OrganicHeroSection';
-import MoringaIntroSection from '../components/sections/MoringaIntroSection';
+import EnhancedMoringaTree from '../components/sections/EnhancedMoringaTree';
 import MoringaBenefitsEducation from '../components/sections/MoringaBenefitsEducation';
 import WellnessProductGrid from '../components/sections/WellnessProductGrid';
 import VisionSection from '../components/sections/VisionSection';
@@ -60,13 +60,17 @@ const RefinedLandingPage = () => {
         initial="initial"
         animate="animate"
         className="min-h-screen"
-        style={{ backgroundColor: '#FEFEFE' }}
+        style={{ 
+          background: 'linear-gradient(180deg, #F8FFF8 0%, #F0F9F0 50%, #E8F5E8 100%)'
+        }}
       >
         {/* Section 1: Organic Hero - Full immersive experience */}
         <OrganicHeroSection />
 
-        {/* Section 2: Interactive Moringa Introduction */}
-        <MoringaIntroSection />
+        {/* Section 2: Enhanced Interactive Moringa Tree */}
+        <section className="py-20" style={{ backgroundColor: 'rgba(248, 255, 248, 0.8)' }}>
+          <EnhancedMoringaTree />
+        </section>
 
         {/* Section 3: Educational Benefits Showcase */}
         <MoringaBenefitsEducation />

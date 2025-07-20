@@ -90,7 +90,7 @@ const OrganicFooter = () => {
                   <Text 
                     size="sm" 
                     className="leading-relaxed"
-                    style={{ color: '#d4e5d4' }}
+                    style={{ color: '#e8f5e8', fontWeight: 400 }}
                   >
                     Bringing you the purest Moringa products from nature's pharmacy. 
                     Committed to your wellness journey with authenticity, purity, and trust.
@@ -135,8 +135,8 @@ const OrganicFooter = () => {
                     ].map((link, index) => (
                       <Text
                         key={index}
-                        className="cursor-pointer transition-colors duration-300"
-                        style={{ color: '#d4e5d4' }}
+                        className="cursor-pointer transition-colors duration-300 hover:text-green-200"
+                        style={{ color: '#e8f5e8', fontWeight: 400 }}
                         onClick={() => navigate(link.path)}
                       >
                         {link.label}
@@ -171,7 +171,7 @@ const OrganicFooter = () => {
                       <Text
                         key={index}
                         className="cursor-pointer transition-colors duration-300"
-                        style={{ color: '#d4e5d4' }}
+                        style={{ color: '#e8f5e8', fontWeight: 400 }}
                         onClick={() => navigate(link.path)}
                       >
                         {link.label}
@@ -198,7 +198,7 @@ const OrganicFooter = () => {
                   <Stack gap="sm">
                     <Group gap="sm" align="flex-start">
                       <IconMapPin className="w-5 h-5 mt-1 flex-shrink-0" style={{ color: '#FFBF00' }} />
-                      <Text size="sm" style={{ color: '#d4e5d4' }}>
+                      <Text size="sm" style={{ color: '#e8f5e8', fontWeight: 400 }}>
                         Dbanyan Group Headquarters<br />
                         123, Green Valley Complex<br />
                         MG Road, Bangalore - 560001<br />
@@ -208,14 +208,14 @@ const OrganicFooter = () => {
 
                     <Group gap="sm" align="center">
                       <IconPhone className="w-5 h-5" style={{ color: '#FFBF00' }} />
-                      <Text size="sm" style={{ color: '#d4e5d4' }}>
+                      <Text size="sm" style={{ color: '#e8f5e8', fontWeight: 400 }}>
                         +91 98765 43210
                       </Text>
                     </Group>
 
                     <Group gap="sm" align="center">
                       <IconMail className="w-5 h-5" style={{ color: '#FFBF00' }} />
-                      <Text size="sm" style={{ color: '#d4e5d4' }}>
+                      <Text size="sm" style={{ color: '#e8f5e8', fontWeight: 400 }}>
                         hello@dbanyangroup.com
                       </Text>
                     </Group>
@@ -299,11 +299,11 @@ const OrganicFooter = () => {
             
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <Group gap="md" align="center">
-                <Text size="sm" style={{ color: '#d4e5d4' }}>
+                <Text size="sm" style={{ color: '#e8f5e8', fontWeight: 400 }}>
                   © 2025 Dbanyan Group. All rights reserved.
                 </Text>
                 <div className="hidden md:block w-1 h-1 rounded-full" style={{ backgroundColor: '#97BC62' }}></div>
-                <Text size="sm" style={{ color: '#d4e5d4' }}>
+                <Text size="sm" style={{ color: '#e8f5e8', fontWeight: 400 }}>
                   Made with 💚 for your wellness
                 </Text>
               </Group>
