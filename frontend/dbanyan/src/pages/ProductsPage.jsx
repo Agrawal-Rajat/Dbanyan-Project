@@ -1,6 +1,5 @@
-// Dbanyan Group - Products Listing Page
-// Implementing project_context.md Section 2.2: Products & Product Details Page
-// User Story: "As a potential customer, I want to see all available products"
+// Dbanyan Group - Modern Products Listing Page
+// Premium e-commerce product showcase with advanced filtering
 
 import React, { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -18,13 +17,33 @@ import {
   Select,
   TextInput,
   Group,
-  Stack
+  Stack,
+  ActionIcon,
+  Rating,
+  Divider,
+  Chip,
+  NumberInput
 } from '@mantine/core';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore, useUIStore } from '../store';
 import { apiClient } from '../api';
 import CartIndicator from '../components/layout/CartIndicator';
+import { 
+  IconSearch, 
+  IconFilter, 
+  IconHeart, 
+  IconShoppingCart,
+  IconEye,
+  IconStar,
+  IconTruck,
+  IconShield,
+  IconLeaf,
+  IconAward,
+  IconPlus,
+  IconMinus,
+  IconX
+} from '@tabler/icons-react';
 
 // Mock extended product data - will be replaced with real API
 const fetchAllProducts = async () => {
@@ -129,10 +148,14 @@ const ProductsPage = () => {
   const addToCart = useCartStore(state => state.addItem);
   const addNotification = useUIStore(state => state.addNotification);
   
-  // State for filtering and sorting
+  // Enhanced state for filtering and sorting
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('name');
+  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [selectedBenefits, setSelectedBenefits] = useState([]);
+  const [showFilters, setShowFilters] = useState(false);
+  const [wishlist, setWishlist] = useState(new Set());
 
   // Fetch products using TanStack Query (Protocol 1.3)
   const { data: products, isLoading, isError, error } = useQuery({
@@ -140,7 +163,7 @@ const ProductsPage = () => {
     queryFn: fetchAllProducts,
   });
 
-  // Filter and sort products
+  // Enhanced filter and sort products
   const filteredProducts = useMemo(() => {
     if (!products) return [];
     
@@ -148,7 +171,11 @@ const ProductsPage = () => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            product.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+      const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
+      const matchesBenefits = selectedBenefits.length === 0 || 
+                             selectedBenefits.some(benefit => product.benefits?.includes(benefit));
+      
+      return matchesSearch && matchesCategory && matchesPrice && matchesBenefits;
     });
 
     // Sort products
@@ -160,6 +187,10 @@ const ProductsPage = () => {
           return b.price - a.price;
         case 'rating':
           return b.rating - a.rating;
+        case 'discount':
+          const discountA = a.originalPrice ? ((a.originalPrice - a.price) / a.originalPrice) * 100 : 0;
+          const discountB = b.originalPrice ? ((b.originalPrice - b.price) / b.originalPrice) * 100 : 0;
+          return discountB - discountA;
         case 'name':
         default:
           return a.name.localeCompare(b.name);
@@ -167,9 +198,9 @@ const ProductsPage = () => {
     });
 
     return filtered;
-  }, [products, searchTerm, selectedCategory, sortBy]);
+  }, [products, searchTerm, selectedCategory, sortBy, priceRange, selectedBenefits]);
 
-  // Get unique categories
+  // Get unique categories and benefits
   const categories = useMemo(() => {
     if (!products) return [];
     const uniqueCategories = [...new Set(products.map(p => p.category))];
@@ -177,6 +208,15 @@ const ProductsPage = () => {
       { value: 'all', label: 'All Products' },
       ...uniqueCategories.map(cat => ({ value: cat, label: cat }))
     ];
+  }, [products]);
+
+  const allBenefits = useMemo(() => {
+    if (!products) return [];
+    const benefits = new Set();
+    products.forEach(product => {
+      product.benefits?.forEach(benefit => benefits.add(benefit));
+    });
+    return Array.from(benefits);
   }, [products]);
 
   // Animation variants
@@ -198,8 +238,6 @@ const ProductsPage = () => {
   };
 
   const handleProductClick = (productId) => {
-    console.log('Product clicked:', productId);
-    console.log('Navigating to:', `/products/${productId}`);
     navigate(`/products/${productId}`);
   };
 
@@ -213,7 +251,6 @@ const ProductsPage = () => {
           message: `${product.name} has been added to your cart!`,
           type: 'success'
         });
-        console.log('Product added to cart:', product.name);
       } catch (error) {
         console.error('Error adding to cart:', error);
         addNotification({
@@ -223,6 +260,25 @@ const ProductsPage = () => {
         });
       }
     }
+  };
+
+  const toggleWishlist = (productId, e) => {
+    e.stopPropagation();
+    const newWishlist = new Set(wishlist);
+    if (newWishlist.has(productId)) {
+      newWishlist.delete(productId);
+    } else {
+      newWishlist.add(productId);
+    }
+    setWishlist(newWishlist);
+  };
+
+  const handleBenefitToggle = (benefit) => {
+    setSelectedBenefits(prev => 
+      prev.includes(benefit) 
+        ? prev.filter(b => b !== benefit)
+        : [...prev, benefit]
+    );
   };
 
   // Loading state

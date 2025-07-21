@@ -12,13 +12,14 @@ import '@mantine/notifications/styles.css'
 
 import App from './App.jsx'
 import { queryClient } from './api/index.js'
+import { modernTheme } from './theme/modernTheme.js'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <HelmetProvider>
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
-          <MantineProvider>
+          <MantineProvider theme={modernTheme}>
             <Notifications />
             <App />
           </MantineProvider>

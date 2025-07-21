@@ -25,6 +25,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useCartStore, useUIStore } from '../store';
 import CartIndicator from '../components/layout/CartIndicator';
+import { IconLeaf } from '@tabler/icons-react';
 
 // Mock API call for individual product (will be replaced with real API)
 const fetchProductById = async (id) => {
@@ -248,8 +249,8 @@ const ProductDetailPage = () => {
           message: `${quantity}x ${product.name} added. Redirecting to checkout...`,
           type: 'success'
         });
-        // For now, just go to test page since checkout isn't implemented yet
-        setTimeout(() => navigate('/test'), 1500);
+        // For now, just go to checkout page
+        navigate('/checkout');
       } catch (error) {
         console.error('Error processing buy now:', error);
         addNotification({
@@ -312,7 +313,7 @@ const ProductDetailPage = () => {
         <meta property="product:price:currency" content="INR" />
       </Helmet>
 
-      <main className="min-h-screen bg-gray-50 py-8">
+      <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50 py-8">
         <Container size="xl">
           {/* Back Button */}
           <Button
@@ -361,23 +362,46 @@ const ProductDetailPage = () => {
                 <motion.div variants={fadeInUp}>
                   <Stack spacing="md">
                     {/* Main Image */}
-                    <Card className="p-0" style={{ backgroundColor: 'white' }}>
-                      <div className="h-96 bg-gradient-to-br from-green-200 to-green-300 flex items-center justify-center rounded-lg relative">
+                    <Card className="p-0 shadow-lg border border-green-100" style={{ backgroundColor: 'white' }}>
+                      <div className="h-96 bg-gradient-to-br from-green-100 via-green-50 to-emerald-100 flex items-center justify-center rounded-lg relative overflow-hidden">
                         {/* Discount Badge */}
                         {product.originalPrice > product.price && (
                           <Badge
-                            className="absolute top-4 left-4 z-10"
-                            color="red"
-                            variant="filled"
+                            className="absolute top-4 left-4 z-10 bg-red-500 text-white shadow-lg"
                             size="lg"
                           >
                             {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
                           </Badge>
                         )}
                         
-                        <Text size="lg" color="dimmed" style={{ fontFamily: '"Inter", sans-serif' }}>
-                          Main Product Image
-                        </Text>
+                        {/* Stock Status Badge */}
+                        <Badge
+                          className={`absolute top-4 right-4 z-10 shadow-lg ${
+                            product.inStock 
+                              ? 'bg-green-500 text-white' 
+                              : 'bg-gray-400 text-white'
+                          }`}
+                          size="lg"
+                        >
+                          {product.inStock ? 'In Stock' : 'Out of Stock'}
+                        </Badge>
+                        
+                        {/* Enhanced Product Image Placeholder */}
+                        <div className="text-center">
+                          <div className="w-32 h-32 bg-green-200 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                            <IconLeaf className="w-16 h-16 text-green-600" />
+                          </div>
+                          <Text size="lg" className="text-green-700 font-semibold">
+                            Premium Moringa Product
+                          </Text>
+                          <Text size="sm" className="text-green-600">
+                            100% Natural & Pure
+                          </Text>
+                        </div>
+                        
+                        {/* Decorative Elements */}
+                        <div className="absolute top-20 left-8 w-16 h-16 bg-green-200 rounded-full opacity-30"></div>
+                        <div className="absolute bottom-16 right-12 w-12 h-12 bg-emerald-200 rounded-full opacity-40"></div>
                       </div>
                     </Card>
 
