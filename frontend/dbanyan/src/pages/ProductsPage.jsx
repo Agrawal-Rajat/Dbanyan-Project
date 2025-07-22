@@ -383,7 +383,7 @@ const ProductsPage = () => {
           >
             <Grid gutter="xl">
               {filteredProducts.map((product) => (
-                <Grid.Col key={product.id} span={{ base: 12, sm: 6, lg: 4 }}>
+                <Grid.Col key={product.id} span={{ base: 12, sm: 6, lg: 3 }}>
                   <motion.div variants={cardVariants}>
                     <Card
                       shadow="sm"
