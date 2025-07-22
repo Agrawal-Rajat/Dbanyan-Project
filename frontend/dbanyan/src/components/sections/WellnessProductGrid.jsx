@@ -22,7 +22,7 @@ const WellnessProductGrid = () => {
       originalPrice: 399.00,
       description: "Pure, nutrient-rich moringa powder for daily wellness.",
       benefits: ["Antioxidant Rich", "Digestive Health", "Nutrient Dense"],
-      image: "/images/moringa-powder.jpg",
+      image: "/images/moringaPowderPic.jpg",
       badge: "Organic",
       rating: 4.9,
       icon: <IconShield className="w-6 h-6 text-organic-forest-600" />
@@ -35,7 +35,7 @@ const WellnessProductGrid = () => {
       originalPrice: 449.00,
       description: "Fresh moringa paste for culinary and health uses.",
       benefits: ["Culinary Use", "Nutrient Dense", "Versatile"],
-      image: "/images/moringa-paste.jpg",
+      image: "/images/moringaPastePic.jpg",
       badge: "Fresh",
       rating: 4.7,
       icon: <IconLeaf className="w-6 h-6 text-organic-forest-600" />
@@ -48,7 +48,7 @@ const WellnessProductGrid = () => {
       originalPrice: 249.00,
       description: "Nutritious moringa drumsticks (pods) for cooking.",
       benefits: ["Rich in Fiber", "Traditional", "Healthy"],
-      image: "/images/moringa-drumstick.jpg",
+      image: "/images/moringaFruitPic.jpg",
       badge: "Traditional",
       rating: 4.6,
       icon: <IconStar className="w-6 h-6 text-organic-forest-600" />
@@ -61,7 +61,7 @@ const WellnessProductGrid = () => {
       originalPrice: 329.00,
       description: "Dried moringa flowers for tea and wellness.",
       benefits: ["Tea", "Antioxidants", "Wellness"],
-      image: "/images/moringa-dry-flower.jpg",
+      image: "/images/moringaFlowerPic.jpg",
       badge: "Wellness",
       rating: 4.5,
       icon: <IconHeart className="w-6 h-6 text-organic-forest-600" />
@@ -155,9 +155,22 @@ const WellnessProductGrid = () => {
                   </Badge>
 
                   {/* Product Image */}
-                  <div className="w-full h-full bg-gradient-to-br from-organic-sage-200 to-organic-sage-300 flex items-center justify-center">
-                    <div className="text-6xl text-organic-forest-400">
-                      {product.icon}
+                  <div className="w-full h-full relative">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div 
+                      className="w-full h-full bg-gradient-to-br from-organic-sage-200 to-organic-sage-300 absolute inset-0 items-center justify-center hidden"
+                    >
+                      <div className="text-6xl text-organic-forest-400">
+                        {product.icon}
+                      </div>
                     </div>
                   </div>
 

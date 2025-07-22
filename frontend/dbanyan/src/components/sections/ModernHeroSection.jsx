@@ -206,7 +206,7 @@ const ModernHeroSection = () => {
                 }}
               >
                 <img
-                  src="/moringaPic/moringaHeroPic.jpg"
+                  src="/images/moringaHeroPic.jpg"
                   alt="Moringa leaves, powder, and tea - premium organic"
                   className="w-full h-96 lg:h-[500px] object-cover"
                   style={{

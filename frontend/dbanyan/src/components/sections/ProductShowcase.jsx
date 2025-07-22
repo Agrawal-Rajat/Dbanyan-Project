@@ -20,7 +20,7 @@ const fetchProducts = async () => {
       id: 1,
       name: 'Moringa Powder',
       price: 299,
-      image: '/images/moringa-powder.jpg',
+      image: '/images/moringaPowderPic.jpg',
       description: 'Pure, nutrient-rich moringa powder for daily wellness.',
       inStock: true,
       quantity: 50
@@ -29,7 +29,7 @@ const fetchProducts = async () => {
       id: 2,
       name: 'Moringa Paste',
       price: 349,
-      image: '/images/moringa-paste.jpg',
+      image: '/images/moringaPastePic.jpg',
       description: 'Fresh moringa paste for culinary and health uses.',
       inStock: true,
       quantity: 30
@@ -38,7 +38,7 @@ const fetchProducts = async () => {
       id: 3,
       name: 'Moringa Drumstick',
       price: 199,
-      image: '/images/moringa-drumstick.jpg',
+      image: '/images/moringaFruitPic.jpg',
       description: 'Nutritious moringa drumsticks (pods) for cooking.',
       inStock: true,
       quantity: 40
@@ -47,7 +47,7 @@ const fetchProducts = async () => {
       id: 4,
       name: 'Moringa Dry Flower',
       price: 259,
-      image: '/images/moringa-dry-flower.jpg',
+      image: '/images/moringaFlowerPic.jpg',
       description: 'Dried moringa flowers for tea and wellness.',
       inStock: true,
       quantity: 20
@@ -177,18 +177,41 @@ const ProductShowcase = () => {
                   >
                     {/* Product Image */}
                     <Card.Section>
-                      <div 
-                        className="h-48 bg-gradient-to-br from-green-200 to-green-300 flex items-center justify-center"
-                        style={{ 
-                          backgroundImage: `url(${product.image})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center'
-                        }}
-                      >
-                        {/* Placeholder for actual product image */}
-                        <Text size="sm" color="dimmed" style={{ fontFamily: '"Inter", sans-serif' }}>
-                          Product Image
-                        </Text>
+                      <div style={{ height: '192px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)' }}>
+                        <img 
+                          src={product.image} 
+                          alt={product.name} 
+                          style={{ 
+                            maxHeight: '90%', 
+                            maxWidth: '90%', 
+                            objectFit: 'contain', 
+                            borderRadius: '8px',
+                            filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
+                          }} 
+                          onError={(e) => { 
+                            console.error('ProductShowcase image failed to load:', product.image);
+                            e.target.style.display = 'none';
+                            // Create placeholder
+                            const placeholder = document.createElement('div');
+                            placeholder.style.cssText = `
+                              width: 90%; height: 90%; 
+                              background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+                              border-radius: 8px;
+                              display: flex;
+                              align-items: center;
+                              justify-content: center;
+                              color: #16a34a;
+                              font-size: 14px;
+                              font-weight: 600;
+                              text-align: center;
+                            `;
+                            placeholder.textContent = product.name;
+                            e.target.parentNode.appendChild(placeholder);
+                          }}
+                          onLoad={() => {
+                            console.log('ProductShowcase image loaded:', product.image);
+                          }}
+                        />
                       </div>
                     </Card.Section>
 

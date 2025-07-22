@@ -55,7 +55,7 @@ const fetchAllProducts = async () => {
       name: 'Moringa Powder',
       price: 299,
       originalPrice: 399,
-      image: '/images/moringa-powder.jpg',
+      image: '/images/moringaPowderPic.jpg',
       description: 'Pure, nutrient-rich moringa powder for daily wellness.',
       category: 'Powder',
       inStock: true,
@@ -70,7 +70,7 @@ const fetchAllProducts = async () => {
       name: 'Moringa Paste',
       price: 349,
       originalPrice: 449,
-      image: '/images/moringa-paste.jpg',
+      image: '/images/moringaPastePic.jpg',
       description: 'Fresh moringa paste for culinary and health uses.',
       category: 'Paste',
       inStock: true,
@@ -85,7 +85,7 @@ const fetchAllProducts = async () => {
       name: 'Moringa Drumstick',
       price: 199,
       originalPrice: 249,
-      image: '/images/moringa-drumstick.jpg',
+      image: '/images/moringaFruitPic.jpg',
       description: 'Nutritious moringa drumsticks (pods) for cooking.',
       category: 'Drumstick',
       inStock: true,
@@ -100,7 +100,7 @@ const fetchAllProducts = async () => {
       name: 'Moringa Dry Flower',
       price: 259,
       originalPrice: 329,
-      image: '/images/moringa-dry-flower.jpg',
+      image: '/images/moringaFlowerPic.jpg',
       description: 'Dried moringa flowers for tea and wellness.',
       category: 'Dry Flower',
       inStock: true,
@@ -290,8 +290,19 @@ const ProductsPage = () => {
         <meta name="keywords" content="Moringa Products, Natural Supplements, Preservative-Free, Organic Health Products, Moringa Oil, Moringa Powder" />
       </Helmet>
 
-      <main className="min-h-screen bg-gray-50 py-8">
-        <Container size="xl">
+      <main 
+        className="relative min-h-screen flex flex-col items-center overflow-hidden py-8"
+        style={{
+          background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #dcfce7 100%)'
+        }}
+      >
+        {/* Organic background pattern */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none z-0">
+          <div className="absolute top-20 left-20 w-64 h-64 rounded-full bg-emerald-300 blur-3xl" />
+          <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full bg-green-300 blur-3xl" />
+          <div className="absolute top-1/2 left-1/3 w-48 h-48 rounded-full bg-emerald-400 blur-2xl" />
+        </div>
+        <Container size="xl" className="relative z-10">
           {/* Page Header */}
           <div className="flex flex-col items-center justify-center text-center mb-12">
             <Title 
@@ -316,18 +327,6 @@ const ProductsPage = () => {
               Each item is created with the highest quality standards to support your natural wellness journey.
             </Text>
             
-            {/* Debug button for testing */}
-              <div className="flex justify-center w-full">
-                <Button 
-                  variant="outline" 
-                  color="green" 
-                  leftIcon={<span role="img" aria-label="test">🧪</span>} 
-                  className="mx-auto mt-2 mb-2"
-                  onClick={() => navigate('/test')}
-                >
-                  Test Page (Debug)
-                </Button>
-              </div>
           </div>
 
           {/* Filters and Search */}
@@ -399,7 +398,8 @@ const ProductsPage = () => {
                       {/* Product Image */}
                       <Card.Section>
                         <div 
-                          className="h-64 bg-gradient-to-br from-green-200 to-green-300 flex items-center justify-center relative"
+                          className="h-64 flex items-center justify-center relative bg-gradient-to-b from-green-50 to-emerald-50 overflow-hidden"
+                          style={{ position: 'relative' }}
                         >
                           {/* Discount Badge */}
                           {product.originalPrice > product.price && (
@@ -411,7 +411,6 @@ const ProductsPage = () => {
                               {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
                             </Badge>
                           )}
-                          
                           {/* Stock Status Badge */}
                           <Badge
                             className="absolute top-3 right-3 z-10"
@@ -420,10 +419,56 @@ const ProductsPage = () => {
                           >
                             {product.inStock ? 'In Stock' : 'Out of Stock'}
                           </Badge>
+                          
+                          {/* Wishlist Button */}
+                          <ActionIcon
+                            className="absolute top-3 right-14 z-10"
+                            variant="light"
+                            color={wishlist.has(product.id) ? 'red' : 'gray'}
+                            onClick={(e) => toggleWishlist(product.id, e)}
+                            size="sm"
+                          >
+                            <IconHeart size={16} fill={wishlist.has(product.id) ? 'currentColor' : 'none'} />
+                          </ActionIcon>
 
-                          <Text size="sm" color="dimmed" style={{ fontFamily: '"Inter", sans-serif' }}>
-                            Product Image
-                          </Text>
+                          <motion.img 
+                            src={product.image} 
+                            alt={product.name} 
+                            className="transition-transform duration-300 hover:scale-105"
+                            style={{ 
+                              maxHeight: '85%', 
+                              maxWidth: '85%', 
+                              objectFit: 'contain', 
+                              borderRadius: '12px',
+                              filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))',
+                              backgroundColor: 'white'
+                            }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3 }}
+                            onError={(e) => { 
+                              console.error('Image failed to load:', product.image);
+                              e.target.style.display = 'none';
+                              // Show placeholder div
+                              const placeholder = document.createElement('div');
+                              placeholder.style.cssText = `
+                                width: 85%; height: 85%; 
+                                background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+                                border-radius: 12px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: #64748b;
+                                font-size: 14px;
+                                font-weight: 500;
+                              `;
+                              placeholder.textContent = product.name;
+                              e.target.parentNode.appendChild(placeholder);
+                            }}
+                            onLoad={() => {
+                              console.log('Image loaded successfully:', product.image);
+                            }}
+                          />
                         </div>
                       </Card.Section>
 

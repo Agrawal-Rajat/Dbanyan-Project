@@ -257,7 +257,7 @@ const EnhancedLandingPage = () => {
                   className="relative group cursor-pointer"
                 >
                   <Image
-                    src="/images/moringa-hero.jpg"
+                    src="/images/moringaHeroPic.jpg"
                     alt="Premium Moringa Tree"
                     radius="xl"
                     className="shadow-2xl"

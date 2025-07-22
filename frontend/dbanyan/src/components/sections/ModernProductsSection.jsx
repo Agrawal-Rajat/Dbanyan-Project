@@ -53,7 +53,7 @@ const ModernProductsSection = () => {
       short_description: 'Pure, nutrient-rich moringa powder for daily wellness',
       price: 299,
       compare_at_price: 399,
-      images: [{ url: '/images/moringa-powder.jpg', alt_text: 'Moringa Powder' }],
+      images: [{ url: '/images/moringaPowderPic.jpg', alt_text: 'Moringa Powder' }],
       category: 'powder',
       is_preservative_free: true
     },
@@ -63,7 +63,7 @@ const ModernProductsSection = () => {
       short_description: 'Fresh moringa paste for culinary and health uses',
       price: 349,
       compare_at_price: 449,
-      images: [{ url: '/images/moringa-paste.jpg', alt_text: 'Moringa Paste' }],
+      images: [{ url: '/images/moringaPastePic.jpg', alt_text: 'Moringa Paste' }],
       category: 'paste',
       is_preservative_free: true
     },
@@ -73,7 +73,7 @@ const ModernProductsSection = () => {
       short_description: 'Nutritious moringa drumsticks (pods) for cooking',
       price: 199,
       compare_at_price: 249,
-      images: [{ url: '/images/moringa-drumstick.jpg', alt_text: 'Moringa Drumstick' }],
+      images: [{ url: '/images/moringaFruitPic.jpg', alt_text: 'Moringa Drumstick' }],
       category: 'drumstick',
       is_preservative_free: true
     },
@@ -83,7 +83,7 @@ const ModernProductsSection = () => {
       short_description: 'Dried moringa flowers for tea and wellness',
       price: 259,
       compare_at_price: 329,
-      images: [{ url: '/images/moringa-dry-flower.jpg', alt_text: 'Moringa Dry Flower' }],
+      images: [{ url: '/images/moringaFlowerPic.jpg', alt_text: 'Moringa Dry Flower' }],
       category: 'dry-flower',
       is_preservative_free: true
     }
