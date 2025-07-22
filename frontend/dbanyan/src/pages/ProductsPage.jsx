@@ -293,7 +293,7 @@ const ProductsPage = () => {
       <main className="min-h-screen bg-gray-50 py-8">
         <Container size="xl">
           {/* Page Header */}
-          <div className="text-center mb-12">
+          <div className="flex flex-col items-center justify-center text-center mb-12">
             <Title 
               order={1} 
               className="text-4xl lg:text-5xl font-bold mb-6"
@@ -317,14 +317,17 @@ const ProductsPage = () => {
             </Text>
             
             {/* Debug button for testing */}
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => navigate('/test')}
-              style={{ borderColor: '#2C5F2D', color: '#2C5F2D' }}
-            >
-              🧪 Test Page (Debug)
-            </Button>
+              <div className="flex justify-center w-full">
+                <Button 
+                  variant="outline" 
+                  color="green" 
+                  leftIcon={<span role="img" aria-label="test">🧪</span>} 
+                  className="mx-auto mt-2 mb-2"
+                  onClick={() => navigate('/test')}
+                >
+                  Test Page (Debug)
+                </Button>
+              </div>
           </div>
 
           {/* Filters and Search */}
