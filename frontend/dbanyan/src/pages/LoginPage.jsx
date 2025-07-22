@@ -6,12 +6,12 @@ import { Container, Paper, Title, Text, TextInput, PasswordInput, Button, Group,
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { useAuthStore } from '../store';
+import { useUserStore } from '../store';
 import { IconLeaf, IconMail, IconLock, IconEye, IconEyeOff, IconAlertCircle } from '@tabler/icons-react';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login, isLoading, error, clearError } = useAuthStore();
+  const { login, isLoading, error, clearError } = useUserStore();
   
   const [formData, setFormData] = useState({
     email: '',

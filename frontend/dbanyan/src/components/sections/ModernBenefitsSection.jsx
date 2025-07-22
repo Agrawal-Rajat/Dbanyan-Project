@@ -88,30 +88,33 @@ const ModernBenefitsSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <Badge 
-            size="lg" 
-            variant="light" 
-            color="green"
-            className="mb-4"
-          >
-            Health Benefits
-          </Badge>
-          <Title 
-            order={2} 
-            className="text-4xl md:text-5xl font-bold text-gray-800 mb-6"
-            style={{ fontFamily: 'Lora, serif' }}
-          >
-            Nature's Complete 
-            <Text component="span" className="text-emerald-600"> Superfood</Text>
-          </Title>
-          <Text 
-            size="lg" 
-            className="text-gray-600 max-w-3xl mx-auto leading-relaxed"
-            style={{ fontFamily: 'Inter, sans-serif' }}
-          >
-            Discover why Moringa is called the "Miracle Tree" - packed with 
-            over 90 nutrients, antioxidants, and bioactive compounds.
-          </Text>
+          <div className="flex flex-col items-center justify-center text-center w-full">
+            <Badge 
+              size="lg" 
+              variant="light" 
+              color="green"
+              className="mb-4 mx-auto"
+              style={{ textAlign: 'center' }}
+            >
+              Health Benefits
+            </Badge>
+            <Title 
+              order={2} 
+              className="text-4xl md:text-5xl font-bold text-gray-800 mb-6 text-center"
+              style={{ fontFamily: 'Lora, serif', textAlign: 'center' }}
+            >
+              Nature's Complete
+              <Text component="span" className="text-emerald-600"> Superfood</Text>
+            </Title>
+            <Text 
+              size="lg" 
+              className="text-gray-600 max-w-3xl mx-auto leading-relaxed text-center"
+              style={{ fontFamily: 'Inter, sans-serif', textAlign: 'center' }}
+            >
+              Discover why Moringa is called the "Miracle Tree" - packed with 
+              over 90 nutrients, antioxidants, and bioactive compounds.
+            </Text>
+          </div>
         </motion.div>
 
         {/* Benefits Grid */}

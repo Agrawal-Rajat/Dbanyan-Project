@@ -49,8 +49,8 @@ const ModernProductsSection = () => {
   const fallbackProducts = [
     {
       uid: '1',
-      name: 'Organic Moringa Powder',
-      short_description: 'Pure, nutrient-rich powder for daily wellness',
+      name: 'Moringa Powder',
+      short_description: 'Pure, nutrient-rich moringa powder for daily wellness',
       price: 299,
       compare_at_price: 399,
       images: [{ url: '/images/moringa-powder.jpg', alt_text: 'Moringa Powder' }],
@@ -59,32 +59,32 @@ const ModernProductsSection = () => {
     },
     {
       uid: '2',
-      name: 'Moringa Capsules',
-      short_description: 'Convenient daily supplement capsules',
-      price: 449,
-      compare_at_price: 549,
-      images: [{ url: '/images/moringa-capsules.jpg', alt_text: 'Moringa Capsules' }],
-      category: 'capsules',
+      name: 'Moringa Paste',
+      short_description: 'Fresh moringa paste for culinary and health uses',
+      price: 349,
+      compare_at_price: 449,
+      images: [{ url: '/images/moringa-paste.jpg', alt_text: 'Moringa Paste' }],
+      category: 'paste',
       is_preservative_free: true
     },
     {
       uid: '3',
-      name: 'Moringa Herbal Tea',
-      short_description: 'Refreshing antioxidant-rich herbal tea',
+      name: 'Moringa Drumstick',
+      short_description: 'Nutritious moringa drumsticks (pods) for cooking',
       price: 199,
       compare_at_price: 249,
-      images: [{ url: '/images/moringa-tea.jpg', alt_text: 'Moringa Tea' }],
-      category: 'tea',
+      images: [{ url: '/images/moringa-drumstick.jpg', alt_text: 'Moringa Drumstick' }],
+      category: 'drumstick',
       is_preservative_free: true
     },
     {
       uid: '4',
-      name: 'Moringa Seed Oil',
-      short_description: 'Premium oil for skin and hair care',
-      price: 599,
-      compare_at_price: 749,
-      images: [{ url: '/images/moringa-oil.jpg', alt_text: 'Moringa Oil' }],
-      category: 'oil',
+      name: 'Moringa Dry Flower',
+      short_description: 'Dried moringa flowers for tea and wellness',
+      price: 259,
+      compare_at_price: 329,
+      images: [{ url: '/images/moringa-dry-flower.jpg', alt_text: 'Moringa Dry Flower' }],
+      category: 'dry-flower',
       is_preservative_free: true
     }
   ];
@@ -102,31 +102,34 @@ const ModernProductsSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <Badge 
-            size="lg" 
-            variant="light" 
-            color="green"
-            className="mb-4"
-          >
-            Premium Products
-          </Badge>
-          <Title 
-            order={2} 
-            className="text-4xl md:text-5xl font-bold text-gray-800 mb-6"
-            style={{ fontFamily: 'Lora, serif' }}
-          >
-            Our
-            <Text component="span" className="text-emerald-600"> Signature </Text>
-            Collection
-          </Title>
-          <Text 
-            size="lg" 
-            className="text-gray-600 max-w-3xl mx-auto leading-relaxed"
-            style={{ fontFamily: 'Inter, sans-serif' }}
-          >
-            Carefully crafted Moringa products to support your wellness journey. 
-            Each product is made with premium organic ingredients and rigorous quality standards.
-          </Text>
+          <div className="flex flex-col items-center justify-center text-center w-full">
+            <Badge 
+              size="lg" 
+              variant="light" 
+              color="green"
+              className="mb-4 mx-auto"
+              style={{ textAlign: 'center' }}
+            >
+              Premium Products
+            </Badge>
+            <Title 
+              order={2} 
+              className="text-4xl md:text-5xl font-bold text-gray-800 mb-6 text-center"
+              style={{ fontFamily: 'Lora, serif', textAlign: 'center' }}
+            >
+              Our
+              <Text component="span" className="text-emerald-600"> Signature </Text>
+              Collection
+            </Title>
+            <Text 
+              size="lg" 
+              className="text-gray-600 max-w-3xl mx-auto leading-relaxed text-center"
+              style={{ fontFamily: 'Inter, sans-serif', textAlign: 'center' }}
+            >
+              Carefully crafted Moringa products to support your wellness journey. 
+              Each product is made with premium organic ingredients and rigorous quality standards.
+            </Text>
+          </div>
         </motion.div>
 
         {/* Products Grid */}

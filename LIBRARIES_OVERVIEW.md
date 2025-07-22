@@ -192,7 +192,7 @@ This document provides a detailed list of all major libraries used in the Dbanya
 | @tabler/icons-react    | Icons                           | 2.x                | https://tabler-icons.io/         |
 | FastAPI                | Backend API                     | 0.110.x            | https://fastapi.tiangolo.com/    |
 | Motor                  | MongoDB Async                   | 3.x                | https://motor.readthedocs.io/    |
-| Pydantic               | Validation                      | 2.x                | https://docs.pydantic.dev/       |
+| Pydantic               | Validation                      | 2.x                | https://docs.pydantic.dev/       |n
 | python-dotenv          | Env Vars                        | 1.x                | https://pypi.org/project/python-dotenv/ |
 | PyJWT                  | JWT Auth                        | 2.x                | https://pyjwt.readthedocs.io/    |
 | Razorpay Python SDK    | Payments                        | 1.x                | https://github.com/razorpay/razorpay-python |

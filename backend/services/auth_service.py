@@ -162,6 +162,7 @@ class AuthService:
         try:
             user = await self.get_user_by_email(email)
             if not user:
+                logger.warning(f"Password reset requested for non-existent email: {email}")
                 return None
             
             # Create reset token (valid for 24 hours)
@@ -175,12 +176,22 @@ class AuthService:
             reset_token = jwt.encode(reset_data, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
             
             # Send email
-            from services.email_service import email_service
-            await email_service.send_password_reset_email(
-                to_email=user.email,
-                name=user.full_name,
-                reset_token=reset_token
-            )
+            try:
+                from .email_service import email_service
+                email_sent = await email_service.send_password_reset_email(
+                    to_email=user.email,
+                    name=user.full_name,
+                    reset_token=reset_token
+                )
+                
+                if email_sent:
+                    logger.info(f"Password reset email sent successfully to: {email}")
+                else:
+                    logger.error(f"Failed to send password reset email to: {email}")
+                    
+            except Exception as email_error:
+                logger.error(f"Error sending password reset email: {email_error}")
+                # Still return the token even if email fails, for debugging
             
             logger.info(f"Password reset initiated for user: {email}")
             return reset_token

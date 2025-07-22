@@ -1,9 +1,10 @@
 // Dbanyan Group - Main App Component
 // Modern design with authentication and improved UX
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { useUserStore } from './store';
 
 // Modern Pages
 import ModernLandingPage from './pages/ModernLandingPage';
@@ -17,6 +18,7 @@ import OrderSuccessPage from './pages/OrderSuccessPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 // Company Pages
 import AboutPage from './pages/AboutPage';
@@ -44,6 +46,13 @@ const ContactPage = () => (
 );
 
 function App() {
+  const { initializeAuth } = useUserStore();
+
+  // Initialize authentication on app start
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
+
   return (
     <>
       {/* Global SEO defaults */}
@@ -62,6 +71,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminDashboard />} />
