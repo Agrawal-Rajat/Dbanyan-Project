@@ -290,8 +290,19 @@ const ProductsPage = () => {
         <meta name="keywords" content="Moringa Products, Natural Supplements, Preservative-Free, Organic Health Products, Moringa Oil, Moringa Powder" />
       </Helmet>
 
-      <main className="min-h-screen bg-gray-50 py-8">
-        <Container size="xl">
+      <main 
+        className="relative min-h-screen flex flex-col items-center overflow-hidden py-8"
+        style={{
+          background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #dcfce7 100%)'
+        }}
+      >
+        {/* Organic background pattern */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none z-0">
+          <div className="absolute top-20 left-20 w-64 h-64 rounded-full bg-emerald-300 blur-3xl" />
+          <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full bg-green-300 blur-3xl" />
+          <div className="absolute top-1/2 left-1/3 w-48 h-48 rounded-full bg-emerald-400 blur-2xl" />
+        </div>
+        <Container size="xl" className="relative z-10">
           {/* Page Header */}
           <div className="flex flex-col items-center justify-center text-center mb-12">
             <Title 
@@ -316,18 +327,6 @@ const ProductsPage = () => {
               Each item is created with the highest quality standards to support your natural wellness journey.
             </Text>
             
-            {/* Debug button for testing */}
-              <div className="flex justify-center w-full">
-                <Button 
-                  variant="outline" 
-                  color="green" 
-                  leftIcon={<span role="img" aria-label="test">🧪</span>} 
-                  className="mx-auto mt-2 mb-2"
-                  onClick={() => navigate('/test')}
-                >
-                  Test Page (Debug)
-                </Button>
-              </div>
           </div>
 
           {/* Filters and Search */}
