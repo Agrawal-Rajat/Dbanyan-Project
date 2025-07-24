@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { Container, Title, Text, Card, Group, Stack, Badge, Button, Grid } from '@mantine/core';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   IconLeaf,
   IconDroplet,
@@ -357,7 +357,8 @@ const ModernMoringaSection = () => {
                   size="lg"
                   radius="xl"
                   rightSection={<IconArrowRight className="w-4 h-4" />}
-                  onClick={() => navigate('/products')}
+                  component={Link}
+                  to="/products"
                   className="font-semibold"
                   style={{
                     background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
@@ -372,7 +373,8 @@ const ModernMoringaSection = () => {
                   size="lg"
                   radius="xl"
                   variant="outline"
-                  onClick={() => navigate('/moringa-guide')}
+                  component={Link}
+                  to="/moringa-guide"
                   className="font-semibold border-emerald-300 text-emerald-700 hover:bg-emerald-50"
                 >
                   Learn More
