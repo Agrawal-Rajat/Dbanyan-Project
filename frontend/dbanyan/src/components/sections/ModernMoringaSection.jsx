@@ -4,37 +4,26 @@
 import React, { useState } from 'react';
 import { Container, Title, Text, Card, Group, Stack, Badge, Button, Grid } from '@mantine/core';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { 
-  IconLeaf, 
-  IconDroplet, 
-  IconFlame, 
-  IconShield, 
+import { useNavigate, Link } from 'react-router-dom';
+import {
+  IconLeaf,
+  IconDroplet,
+  IconFlame,
+  IconShield,
   IconHeart,
   IconBrain,
   IconEye,
   IconBone,
-  IconArrowRight,
-  IconPlant
+  IconPlant,
+  IconArrowRight
 } from '@tabler/icons-react';
 
 const ModernMoringaSection = () => {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('benefits');
-
   const moringaParts = [
     {
       id: 'leaves',
       name: 'Moringa Leaves',
-      image: 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=400&h=300&fit=crop',
-      nutrients: '92 Nutrients',
-      benefits: ['7x Vitamin C of Oranges', '4x Calcium of Milk', '3x Iron of Spinach'],
-      icon: IconLeaf,
-      color: '#10b981'
-    },
-    {
-      id: 'pods',
-      name: 'Moringa Pods',
       image: 'https://images.unsplash.com/photo-1609501676725-7186f660e3a5?w=400&h=300&fit=crop',
       nutrients: 'High Fiber',
       benefits: ['Rich in Antioxidants', 'Digestive Health', 'Natural Detox'],
@@ -114,45 +103,47 @@ const ModernMoringaSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="mb-16"
         >
-          <Badge 
-            size="lg" 
-            radius="xl" 
-            className="mb-4"
-            style={{ 
-              background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
-              color: '#059669',
-              border: '1px solid #a7f3d0'
-            }}
-          >
-            <IconLeaf className="w-4 h-4 mr-2" />
-            The Miracle Tree
-          </Badge>
-          
-          <Title 
-            order={2} 
-            className="text-4xl md:text-5xl font-bold mb-6"
-            style={{ 
-              fontFamily: '"Lora", serif',
-              background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}
-          >
-            Your Life-Changing Journey Starts Here
-          </Title>
-          
-          <Text 
-            size="xl" 
-            className="text-gray-600 max-w-3xl mx-auto leading-relaxed"
-            style={{ fontFamily: '"Inter", sans-serif' }}
-          >
-            Imagine waking up every morning with boundless energy, crystal-clear focus, and 
-            unshakeable vitality. This isn't just a dream – it's the reality thousands have 
-            discovered through the transformative power of pure Moringa. Every part of this 
-            miraculous tree holds the potential to revolutionize your health story.
-          </Text>
+          <div className="flex flex-col items-center justify-center text-center w-full">
+            <Badge 
+              size="lg" 
+              radius="xl" 
+              className="mb-4 mx-auto"
+              style={{ 
+                background: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)',
+                color: '#059669',
+                border: '1px solid #a7f3d0',
+                textAlign: 'center'
+              }}
+            >
+              <IconLeaf className="w-4 h-4 mr-2" />
+              THE MIRACLE TREE
+            </Badge>
+            <Title 
+              order={2} 
+              className="text-4xl md:text-5xl font-bold mb-6 text-center"
+              style={{ 
+                fontFamily: 'Lora, serif',
+                background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                textAlign: 'center'
+              }}
+            >
+              Your Life-Changing Journey Starts Here
+            </Title>
+            <Text 
+              size="xl" 
+              className="text-gray-600 max-w-3xl mx-auto leading-relaxed text-center"
+              style={{ fontFamily: 'Inter, sans-serif', textAlign: 'center' }}
+            >
+              Imagine waking up every morning with boundless energy, crystal-clear focus, and 
+              unshakeable vitality. This isn't just a dream – it's the reality thousands have 
+              discovered through the transformative power of pure Moringa. Every part of this 
+              miraculous tree holds the potential to revolutionize your health story.
+            </Text>
+          </div>
         </motion.div>
 
         {/* Tab Navigation */}
@@ -366,7 +357,8 @@ const ModernMoringaSection = () => {
                   size="lg"
                   radius="xl"
                   rightSection={<IconArrowRight className="w-4 h-4" />}
-                  onClick={() => navigate('/products')}
+                  component={Link}
+                  to="/products"
                   className="font-semibold"
                   style={{
                     background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
@@ -381,7 +373,8 @@ const ModernMoringaSection = () => {
                   size="lg"
                   radius="xl"
                   variant="outline"
-                  onClick={() => navigate('/moringa-guide')}
+                  component={Link}
+                  to="/moringa-guide"
                   className="font-semibold border-emerald-300 text-emerald-700 hover:bg-emerald-50"
                 >
                   Learn More

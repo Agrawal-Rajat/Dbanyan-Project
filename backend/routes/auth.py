@@ -9,7 +9,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from pydantic import BaseModel, EmailStr
 
 from db import get_database
-from models import UserCreate, UserLogin, UserResponse, ResponseModel, Token
+from models import UserCreate, UserLogin, UserResponse, ResponseModel, Token, User
 from services import AuthService
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
@@ -433,6 +433,14 @@ async def create_admin(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to create admin: {str(e)}"
         )
+
+
+@router.get("/me", response_model=UserResponse)
+async def get_current_user_profile(
+    current_user: User = Depends(get_current_user)
+):
+    """Get current user profile"""
+    return UserResponse(**current_user.model_dump())
 
 
 @router.post("/register", response_model=Token)

@@ -31,20 +31,20 @@ import { IconLeaf } from '@tabler/icons-react';
 const fetchProductById = async (id) => {
   await new Promise(resolve => setTimeout(resolve, 600));
   
-  // Mock detailed product data
+  // Mock detailed product data - matching our 4 main products
   const products = {
     1: {
       id: 1,
-      name: 'Moringa Leaf Powder Premium',
+      name: 'Moringa Powder',
       price: 299,
-      originalPrice: 349,
+      originalPrice: 399,
       images: [
-        '/api/placeholder/600/600',
-        '/api/placeholder/600/600',
-        '/api/placeholder/600/600',
-        '/api/placeholder/600/600'
+        '/images/moringaPowderPic.jpg',
+        '/images/moringaPowderPic.jpg',
+        '/images/moringaPowderPic.jpg',
+        '/images/moringaPowderPic.jpg'
       ],
-      description: 'Our premium Moringa Leaf Powder is made from carefully selected, organically grown Moringa leaves. Each batch is tested for purity and potency to ensure you receive the highest quality nutritional supplement.',
+      description: 'Pure, nutrient-rich moringa powder for daily wellness. Our premium Moringa Powder is made from carefully selected, organically grown Moringa leaves. Each batch is tested for purity and potency to ensure you receive the highest quality nutritional supplement.',
       category: 'Powder',
       inStock: true,
       quantity: 50,
@@ -68,112 +68,93 @@ const fetchProductById = async (id) => {
         'Calcium': '6% DV'
       },
       benefits: [
+        'High in Vitamin C',
+        'Antioxidant Rich', 
+        'Natural Energy Boost',
         'Rich in vitamins A, C, and E',
-        'High in antioxidants',
-        'Natural energy booster',
         'Supports immune system',
-        'Aids in digestion',
         'Promotes healthy skin'
       ],
-      usage: 'Mix 1 teaspoon with water, juice, or smoothies. Take once daily, preferably in the morning.',
+      usage: 'Mix 1-2 teaspoons with water, juice, or smoothies daily. Best taken with meals.',
       certifications: ['Organic', 'Non-GMO', 'Gluten-Free', 'Vegan'],
-      shelfLife: '24 months from manufacturing date',
+      shelfLife: '18 months from manufacturing date',
       storage: 'Store in a cool, dry place away from direct sunlight'
     },
     2: {
       id: 2,
-      name: 'Moringa Seeds Premium',
-      price: 399,
+      name: 'Moringa Paste',
+      price: 349,
       originalPrice: 449,
-      images: ['/api/placeholder/600/600', '/api/placeholder/600/600'],
-      description: 'Premium quality Moringa seeds sourced directly from our certified organic farms. These seeds are known for their detoxifying properties and high protein content.',
-      category: 'Seeds',
+      images: ['/images/moringaPastePic.jpg', '/images/moringaPastePic.jpg'],
+      description: 'Fresh moringa paste for culinary and health uses. Premium quality Moringa paste made from fresh leaves, perfect for cooking and direct consumption.',
+      category: 'Paste',
       inStock: true,
       quantity: 30,
-      rating: 4.6,
-      reviews: 89,
+      rating: 4.7,
+      reviews: 98,
       weight: '200g',
-      ingredients: ['Pure Moringa Oleifera Seeds'],
-      benefits: ['High protein content', 'Natural detoxification', 'Rich in healthy fats'],
-      usage: 'Consume 2-3 seeds daily with water',
-      certifications: ['Organic', 'Non-GMO'],
+      ingredients: ['Fresh Moringa Leaves', 'Natural preservatives'],
+      benefits: ['Culinary Use', 'Nutrient Dense', 'Versatile', 'Fresh taste', 'Ready to use'],
+      usage: 'Use 1-2 tablespoons in cooking or mix with water/juice. Can be added to curries, soups, or consumed directly.',
+      certifications: ['Fresh', 'Natural'],
       nutritionalInfo: {
-        'Serving Size': '2-3 seeds',
-        'Protein': '25g per 100g',
-        'Healthy Fats': '15g per 100g'
-      }
+        'Serving Size': '1 tablespoon (15g)',
+        'Protein': '8g per 100g',
+        'Fresh nutrients': 'Preserved'
+      },
+      shelfLife: '6 months refrigerated',
+      storage: 'Refrigerate after opening'
     },
     3: {
       id: 3,
-      name: 'Moringa Oil Cold-Pressed',
-      price: 599,
-      originalPrice: 699,
-      images: ['/api/placeholder/600/600', '/api/placeholder/600/600'],
-      description: 'Cold-pressed Moringa oil for skin and hair nourishment. 100% pure with no additives, extracted using traditional methods to preserve all natural properties.',
-      category: 'Oil',
+      name: 'Moringa Drumstick',
+      price: 199,
+      originalPrice: 249,
+      images: ['/images/moringaFruitPic.jpg', '/images/moringaFruitPic.jpg'],
+      description: 'Nutritious moringa drumsticks (pods) for cooking. Fresh moringa drumsticks perfect for traditional cooking and rich in nutrients.',
+      category: 'Drumstick',
       inStock: true,
-      quantity: 25,
-      rating: 4.9,
-      reviews: 156,
-      weight: '50ml',
-      ingredients: ['100% Pure Cold-Pressed Moringa Oil'],
-      benefits: ['Skin nourishment', 'Hair care', 'Anti-aging properties', 'Natural moisturizer'],
-      usage: 'Apply 2-3 drops to skin or hair. Can be used daily.',
-      certifications: ['Organic', 'Cold-Pressed', 'Pure']
+      quantity: 40,
+      rating: 4.6,
+      reviews: 89,
+      weight: '500g',
+      ingredients: ['Fresh Moringa Pods (Drumsticks)'],
+      benefits: ['Rich in Fiber', 'Traditional', 'Healthy', 'Vitamin C rich', 'Good for digestion'],
+      usage: 'Use in curries, sambar, soups. Cut into pieces and cook like any vegetable.',
+      certifications: ['Fresh', 'Natural', 'Pesticide-Free'],
+      nutritionalInfo: {
+        'Serving Size': '100g',
+        'Fiber': '3.2g per 100g',
+        'Vitamin C': '120mg per 100g',
+        'Protein': '2.1g per 100g'
+      },
+      shelfLife: '1 week fresh',
+      storage: 'Refrigerate and use within a week'
     },
     4: {
       id: 4,
-      name: 'Moringa Tea Blend',
-      price: 249,
-      originalPrice: 299,
-      images: ['/api/placeholder/600/600', '/api/placeholder/600/600'],
-      description: 'Soothing herbal tea blend with pure Moringa leaves and natural herbs for daily wellness and relaxation.',
-      category: 'Tea',
-      inStock: false,
-      quantity: 0,
-      rating: 4.7,
-      reviews: 98,
-      weight: '50g',
-      ingredients: ['Moringa Leaves', 'Natural Herbs', 'No artificial flavors'],
-      benefits: ['Relaxing', 'Digestive support', 'Rich in antioxidants', 'Caffeine-free'],
-      usage: 'Steep 1 teaspoon in hot water for 3-5 minutes. Enjoy warm.',
-      certifications: ['Organic', 'Caffeine-Free']
-    },
-    5: {
-      id: 5,
-      name: 'Moringa Capsules',
-      price: 449,
-      originalPrice: 499,
-      images: ['/api/placeholder/600/600', '/api/placeholder/600/600'],
-      description: 'Convenient Moringa leaf extract capsules for busy lifestyles. Easy to consume daily supplement with standardized extract.',
-      category: 'Capsules',
+      name: 'Moringa Dry Flower',
+      price: 259,
+      originalPrice: 329,
+      images: ['/images/moringaFlowerPic.jpg', '/images/moringaFlowerPic.jpg'],
+      description: 'Dried moringa flowers for tea and wellness. Premium dried moringa flowers perfect for brewing nutritious herbal tea.',
+      category: 'Dry Flower',
       inStock: true,
-      quantity: 40,
+      quantity: 20,
       rating: 4.5,
       reviews: 67,
-      weight: '60 capsules',
-      ingredients: ['Moringa Leaf Extract', 'Vegetarian Capsule'],
-      benefits: ['Convenient', 'Daily supplement', 'Standardized extract', 'Easy absorption'],
-      usage: 'Take 1-2 capsules daily with water, preferably with meals.',
-      certifications: ['Vegetarian', 'Standardized Extract']
-    },
-    6: {
-      id: 6,
-      name: 'Moringa Face Cream',
-      price: 349,
-      originalPrice: 399,
-      images: ['/api/placeholder/600/600', '/api/placeholder/600/600'],
-      description: 'Natural face cream infused with Moringa oil for healthy, glowing skin. Specially formulated for all skin types.',
-      category: 'Skincare',
-      inStock: true,
-      quantity: 15,
-      rating: 4.4,
-      reviews: 43,
-      weight: '30g',
-      ingredients: ['Moringa Oil', 'Natural moisturizers', 'Vitamin E', 'No parabens'],
-      benefits: ['Natural glow', 'Hydrating', 'Anti-aging', 'Suitable for all skin types'],
-      usage: 'Apply small amount to clean face, gently massage until absorbed.',
-      certifications: ['Natural', 'Paraben-Free', 'Dermatologically Tested']
+      weight: '50g',
+      ingredients: ['100% Dried Moringa Flowers'],
+      benefits: ['Tea', 'Antioxidants', 'Wellness', 'Relaxing', 'Digestive support'],
+      usage: 'Steep 1 teaspoon in hot water for 5-7 minutes. Can be consumed 2-3 times daily.',
+      certifications: ['Natural', 'Caffeine-Free'],
+      nutritionalInfo: {
+        'Serving Size': '1 teaspoon (2g)',
+        'Antioxidants': 'High',
+        'Caffeine': '0mg'
+      },
+      shelfLife: '24 months from manufacturing date',
+      storage: 'Store in a cool, dry place in airtight container'
     }
   };
   
@@ -386,22 +367,41 @@ const ProductDetailPage = () => {
                           {product.inStock ? 'In Stock' : 'Out of Stock'}
                         </Badge>
                         
-                        {/* Enhanced Product Image Placeholder */}
-                        <div className="text-center">
-                          <div className="w-32 h-32 bg-green-200 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                            <IconLeaf className="w-16 h-16 text-green-600" />
+                        {/* Enhanced Product Image */}
+                        <div className="relative h-96 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl overflow-hidden flex items-center justify-center">
+                          <img
+                            src={product.images[selectedImageIndex] || product.images[0]}
+                            alt={product.name}
+                            className="max-w-full max-h-full object-contain"
+                            style={{
+                              filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.1))'
+                            }}
+                            onError={(e) => {
+                              console.error('Product image failed to load:', e.target.src);
+                              // Fallback to placeholder
+                              e.target.style.display = 'none';
+                              const placeholder = e.target.parentNode.querySelector('.image-placeholder');
+                              if (placeholder) placeholder.style.display = 'flex';
+                            }}
+                          />
+                          
+                          {/* Fallback placeholder (hidden by default) */}
+                          <div className="image-placeholder absolute inset-0 flex flex-col items-center justify-center" style={{ display: 'none' }}>
+                            <div className="w-32 h-32 bg-green-200 rounded-full flex items-center justify-center mb-4 shadow-lg">
+                              <IconLeaf className="w-16 h-16 text-green-600" />
+                            </div>
+                            <Text size="lg" className="text-green-700 font-semibold">
+                              {product.name}
+                            </Text>
+                            <Text size="sm" className="text-green-600">
+                              100% Natural & Pure
+                            </Text>
                           </div>
-                          <Text size="lg" className="text-green-700 font-semibold">
-                            Premium Moringa Product
-                          </Text>
-                          <Text size="sm" className="text-green-600">
-                            100% Natural & Pure
-                          </Text>
+                          
+                          {/* Decorative Elements */}
+                          <div className="absolute top-20 left-8 w-16 h-16 bg-green-200 rounded-full opacity-30"></div>
+                          <div className="absolute bottom-16 right-12 w-12 h-12 bg-emerald-200 rounded-full opacity-40"></div>
                         </div>
-                        
-                        {/* Decorative Elements */}
-                        <div className="absolute top-20 left-8 w-16 h-16 bg-green-200 rounded-full opacity-30"></div>
-                        <div className="absolute bottom-16 right-12 w-12 h-12 bg-emerald-200 rounded-full opacity-40"></div>
                       </div>
                     </Card>
 
@@ -411,17 +411,26 @@ const ProductDetailPage = () => {
                         {product.images.map((image, index) => (
                           <Grid.Col key={index} span={3}>
                             <Card 
-                              className={`p-0 cursor-pointer transition-all duration-200 ${
+                              className={`p-2 cursor-pointer transition-all duration-200 ${
                                 selectedImageIndex === index 
                                   ? 'ring-2 ring-green-500' 
                                   : 'hover:ring-1 hover:ring-green-300'
                               }`}
                               onClick={() => setSelectedImageIndex(index)}
                             >
-                              <div className="h-20 bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center rounded">
-                                <Text size="xs" color="dimmed">
-                                  {index + 1}
-                                </Text>
+                              <div className="h-20 bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center rounded overflow-hidden">
+                                <img
+                                  src={image}
+                                  alt={`${product.name} view ${index + 1}`}
+                                  className="max-w-full max-h-full object-contain"
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    const fallback = document.createElement('div');
+                                    fallback.className = 'text-xs text-gray-600 font-medium';
+                                    fallback.textContent = `${index + 1}`;
+                                    e.target.parentNode.appendChild(fallback);
+                                  }}
+                                />
                               </div>
                             </Card>
                           </Grid.Col>

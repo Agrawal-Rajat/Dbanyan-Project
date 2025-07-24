@@ -25,12 +25,12 @@ import {
   IconAlertCircle
 } from '@tabler/icons-react';
 import { useForm } from '@mantine/form';
-import { useAuthStore } from '../store';
+import { useUserStore } from '../store';
 import ModernNavBar from '../components/layout/ModernNavBar';
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
-  const { forgotPassword, isLoading, error } = useAuthStore();
+  const { forgotPassword, isLoading, error } = useUserStore();
   const [emailSent, setEmailSent] = useState(false);
 
   const form = useForm({

@@ -16,55 +16,55 @@ const WellnessProductGrid = () => {
   const products = [
     {
       id: 1,
-      name: "Moringa Capsules Premium",
-      subtitle: "Daily Wellness Boost",
-      price: 449.00,
-      originalPrice: 599.00,
-      description: "Pure moringa leaf powder in convenient capsules for daily nutrition and energy. Made with finest quality Indian moringa leaves.",
-      benefits: ["Rich in Vitamins", "Natural Energy", "Immune Support"],
-      image: "/api/placeholder/300/400",
-      badge: "Best Seller",
-      rating: 4.8,
-      icon: <IconLeaf className="w-6 h-6 text-organic-forest-600" />
-    },
-    {
-      id: 2,
-      name: "Moringa Leaf Powder",
+      name: "Moringa Powder",
       subtitle: "Pure Organic Powder",
       price: 299.00,
       originalPrice: 399.00,
-      description: "100% organic moringa leaf powder sourced from Kerala farms, perfect for smoothies and traditional Indian cooking.",
+      description: "Pure, nutrient-rich moringa powder for daily wellness.",
       benefits: ["Antioxidant Rich", "Digestive Health", "Nutrient Dense"],
-      image: "/api/placeholder/300/400",
+      image: "/images/moringaPowderPic.jpg",
       badge: "Organic",
       rating: 4.9,
       icon: <IconShield className="w-6 h-6 text-organic-forest-600" />
     },
     {
+      id: 2,
+      name: "Moringa Paste",
+      subtitle: "Fresh Culinary Paste",
+      price: 349.00,
+      originalPrice: 449.00,
+      description: "Fresh moringa paste for culinary and health uses.",
+      benefits: ["Culinary Use", "Nutrient Dense", "Versatile"],
+      image: "/images/moringaPastePic.jpg",
+      badge: "Fresh",
+      rating: 4.7,
+      icon: <IconLeaf className="w-6 h-6 text-organic-forest-600" />
+    },
+    {
       id: 3,
-      name: "Moringa Herbal Tea",
-      subtitle: "Ayurvedic Wellness Blend",
+      name: "Moringa Drumstick",
+      subtitle: "Nutritious Pods",
       price: 199.00,
       originalPrice: 249.00,
-      description: "Soothing moringa tea blend with traditional Indian herbs for relaxation and natural wellness.",
-      benefits: ["Calming Effect", "Metabolic Support", "Natural Detox"],
-      image: "/api/placeholder/300/400",
-      badge: "New",
-      rating: 4.7,
-      icon: <IconHeart className="w-6 h-6 text-organic-forest-600" />
+      description: "Nutritious moringa drumsticks (pods) for cooking.",
+      benefits: ["Rich in Fiber", "Traditional", "Healthy"],
+      image: "/images/moringaFruitPic.jpg",
+      badge: "Traditional",
+      rating: 4.6,
+      icon: <IconStar className="w-6 h-6 text-organic-forest-600" />
     },
     {
       id: 4,
-      name: "Moringa Beauty Oil",
-      subtitle: "Cold-Pressed Elixir",
-      price: 599.00,
-      originalPrice: 749.00,
-      description: "Cold-pressed moringa oil from organic Indian farms for skin and hair nourishment.",
-      benefits: ["Skin Hydration", "Hair Strength", "Anti-Aging"],
-      image: "/api/placeholder/300/400",
-      badge: "Premium",
-      rating: 4.8,
-      icon: <IconStar className="w-6 h-6 text-organic-forest-600" />
+      name: "Moringa Dry Flower",
+      subtitle: "Dried Flowers for Tea",
+      price: 259.00,
+      originalPrice: 329.00,
+      description: "Dried moringa flowers for tea and wellness.",
+      benefits: ["Tea", "Antioxidants", "Wellness"],
+      image: "/images/moringaFlowerPic.jpg",
+      badge: "Wellness",
+      rating: 4.5,
+      icon: <IconHeart className="w-6 h-6 text-organic-forest-600" />
     }
   ];
 
@@ -155,9 +155,22 @@ const WellnessProductGrid = () => {
                   </Badge>
 
                   {/* Product Image */}
-                  <div className="w-full h-full bg-gradient-to-br from-organic-sage-200 to-organic-sage-300 flex items-center justify-center">
-                    <div className="text-6xl text-organic-forest-400">
-                      {product.icon}
+                  <div className="w-full h-full relative">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div 
+                      className="w-full h-full bg-gradient-to-br from-organic-sage-200 to-organic-sage-300 absolute inset-0 items-center justify-center hidden"
+                    >
+                      <div className="text-6xl text-organic-forest-400">
+                        {product.icon}
+                      </div>
                     </div>
                   </div>
 

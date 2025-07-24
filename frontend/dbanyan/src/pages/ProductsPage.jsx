@@ -52,11 +52,11 @@ const fetchAllProducts = async () => {
   return [
     {
       id: 1,
-      name: 'Moringa Leaf Powder',
+      name: 'Moringa Powder',
       price: 299,
-      originalPrice: 349,
-      image: '/api/placeholder/400/400',
-      description: 'Pure, dried Moringa leaves ground to perfection. Rich in vitamins A, C, and E, plus essential minerals.',
+      originalPrice: 399,
+      image: '/images/moringaPowderPic.jpg',
+      description: 'Pure, nutrient-rich moringa powder for daily wellness.',
       category: 'Powder',
       inStock: true,
       quantity: 50,
@@ -67,78 +67,48 @@ const fetchAllProducts = async () => {
     },
     {
       id: 2,
-      name: 'Moringa Seeds Premium',
-      price: 399,
+      name: 'Moringa Paste',
+      price: 349,
       originalPrice: 449,
-      image: '/api/placeholder/400/400',
-      description: 'Premium quality Moringa seeds with natural detoxifying properties and high protein content.',
-      category: 'Seeds',
+      image: '/images/moringaPastePic.jpg',
+      description: 'Fresh moringa paste for culinary and health uses.',
+      category: 'Paste',
       inStock: true,
       quantity: 30,
-      rating: 4.6,
-      reviews: 89,
-      benefits: ['High Protein', 'Detoxifying', 'Healthy Fats'],
+      rating: 4.7,
+      reviews: 98,
+      benefits: ['Culinary Use', 'Nutrient Dense', 'Versatile'],
       weight: '200g'
     },
     {
       id: 3,
-      name: 'Moringa Oil Cold-Pressed',
-      price: 599,
-      originalPrice: 699,
-      image: '/api/placeholder/400/400',
-      description: 'Cold-pressed Moringa oil for skin and hair nourishment. 100% pure with no additives.',
-      category: 'Oil',
+      name: 'Moringa Drumstick',
+      price: 199,
+      originalPrice: 249,
+      image: '/images/moringaFruitPic.jpg',
+      description: 'Nutritious moringa drumsticks (pods) for cooking.',
+      category: 'Drumstick',
       inStock: true,
-      quantity: 25,
-      rating: 4.9,
-      reviews: 156,
-      benefits: ['Skin Nourishment', 'Hair Care', 'Anti-Aging'],
-      weight: '50ml'
+      quantity: 40,
+      rating: 4.6,
+      reviews: 89,
+      benefits: ['Rich in Fiber', 'Traditional', 'Healthy'],
+      weight: '500g'
     },
     {
       id: 4,
-      name: 'Moringa Tea Blend',
-      price: 249,
-      originalPrice: 299,
-      image: '/api/placeholder/400/400',
-      description: 'Soothing herbal tea blend with pure Moringa leaves and natural herbs for daily wellness.',
-      category: 'Tea',
-      inStock: false,
-      quantity: 0,
-      rating: 4.7,
-      reviews: 98,
-      benefits: ['Relaxing', 'Digestive Support', 'Antioxidants'],
-      weight: '50g'
-    },
-    {
-      id: 5,
-      name: 'Moringa Capsules',
-      price: 449,
-      originalPrice: 499,
-      image: '/api/placeholder/400/400',
-      description: 'Convenient Moringa leaf extract capsules for busy lifestyles. Easy to consume daily supplement.',
-      category: 'Capsules',
+      name: 'Moringa Dry Flower',
+      price: 259,
+      originalPrice: 329,
+      image: '/images/moringaFlowerPic.jpg',
+      description: 'Dried moringa flowers for tea and wellness.',
+      category: 'Dry Flower',
       inStock: true,
-      quantity: 40,
+      quantity: 20,
       rating: 4.5,
       reviews: 67,
-      benefits: ['Convenient', 'Daily Supplement', 'Standardized Extract'],
-      weight: '60 capsules'
-    },
-    {
-      id: 6,
-      name: 'Moringa Face Cream',
-      price: 349,
-      originalPrice: 399,
-      image: '/api/placeholder/400/400',
-      description: 'Natural face cream infused with Moringa oil for healthy, glowing skin.',
-      category: 'Skincare',
-      inStock: true,
-      quantity: 15,
-      rating: 4.4,
-      reviews: 43,
-      benefits: ['Natural Glow', 'Hydrating', 'Anti-Aging'],
-      weight: '30g'
+      benefits: ['Tea', 'Antioxidants', 'Wellness'],
+      weight: '50g'
     }
   ];
 };
@@ -320,10 +290,21 @@ const ProductsPage = () => {
         <meta name="keywords" content="Moringa Products, Natural Supplements, Preservative-Free, Organic Health Products, Moringa Oil, Moringa Powder" />
       </Helmet>
 
-      <main className="min-h-screen bg-gray-50 py-8">
-        <Container size="xl">
+      <main 
+        className="relative min-h-screen flex flex-col items-center overflow-hidden py-8"
+        style={{
+          background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #dcfce7 100%)'
+        }}
+      >
+        {/* Organic background pattern */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none z-0">
+          <div className="absolute top-20 left-20 w-64 h-64 rounded-full bg-emerald-300 blur-3xl" />
+          <div className="absolute bottom-20 right-20 w-80 h-80 rounded-full bg-green-300 blur-3xl" />
+          <div className="absolute top-1/2 left-1/3 w-48 h-48 rounded-full bg-emerald-400 blur-2xl" />
+        </div>
+        <Container size="xl" className="relative z-10">
           {/* Page Header */}
-          <div className="text-center mb-12">
+          <div className="flex flex-col items-center justify-center text-center mb-12">
             <Title 
               order={1} 
               className="text-4xl lg:text-5xl font-bold mb-6"
@@ -346,15 +327,6 @@ const ProductsPage = () => {
               Each item is created with the highest quality standards to support your natural wellness journey.
             </Text>
             
-            {/* Debug button for testing */}
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => navigate('/test')}
-              style={{ borderColor: '#2C5F2D', color: '#2C5F2D' }}
-            >
-              🧪 Test Page (Debug)
-            </Button>
           </div>
 
           {/* Filters and Search */}
@@ -413,7 +385,7 @@ const ProductsPage = () => {
           >
             <Grid gutter="xl">
               {filteredProducts.map((product) => (
-                <Grid.Col key={product.id} span={{ base: 12, sm: 6, lg: 4 }}>
+                <Grid.Col key={product.id} span={{ base: 12, sm: 6, lg: 3 }}>
                   <motion.div variants={cardVariants}>
                     <Card
                       shadow="sm"
@@ -426,7 +398,8 @@ const ProductsPage = () => {
                       {/* Product Image */}
                       <Card.Section>
                         <div 
-                          className="h-64 bg-gradient-to-br from-green-200 to-green-300 flex items-center justify-center relative"
+                          className="h-64 flex items-center justify-center relative bg-gradient-to-b from-green-50 to-emerald-50 overflow-hidden"
+                          style={{ position: 'relative' }}
                         >
                           {/* Discount Badge */}
                           {product.originalPrice > product.price && (
@@ -438,7 +411,6 @@ const ProductsPage = () => {
                               {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
                             </Badge>
                           )}
-                          
                           {/* Stock Status Badge */}
                           <Badge
                             className="absolute top-3 right-3 z-10"
@@ -447,10 +419,56 @@ const ProductsPage = () => {
                           >
                             {product.inStock ? 'In Stock' : 'Out of Stock'}
                           </Badge>
+                          
+                          {/* Wishlist Button */}
+                          <ActionIcon
+                            className="absolute top-3 right-14 z-10"
+                            variant="light"
+                            color={wishlist.has(product.id) ? 'red' : 'gray'}
+                            onClick={(e) => toggleWishlist(product.id, e)}
+                            size="sm"
+                          >
+                            <IconHeart size={16} fill={wishlist.has(product.id) ? 'currentColor' : 'none'} />
+                          </ActionIcon>
 
-                          <Text size="sm" color="dimmed" style={{ fontFamily: '"Inter", sans-serif' }}>
-                            Product Image
-                          </Text>
+                          <motion.img 
+                            src={product.image} 
+                            alt={product.name} 
+                            className="transition-transform duration-300 hover:scale-105"
+                            style={{ 
+                              maxHeight: '85%', 
+                              maxWidth: '85%', 
+                              objectFit: 'contain', 
+                              borderRadius: '12px',
+                              filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))',
+                              backgroundColor: 'white'
+                            }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3 }}
+                            onError={(e) => { 
+                              console.error('Image failed to load:', product.image);
+                              e.target.style.display = 'none';
+                              // Show placeholder div
+                              const placeholder = document.createElement('div');
+                              placeholder.style.cssText = `
+                                width: 85%; height: 85%; 
+                                background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+                                border-radius: 12px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: #64748b;
+                                font-size: 14px;
+                                font-weight: 500;
+                              `;
+                              placeholder.textContent = product.name;
+                              e.target.parentNode.appendChild(placeholder);
+                            }}
+                            onLoad={() => {
+                              console.log('Image loaded successfully:', product.image);
+                            }}
+                          />
                         </div>
                       </Card.Section>
 

@@ -349,23 +349,235 @@ export const useUIStore = create(
   }))
 );
 
-// === USER STORE - For authentication (future) ===
+// === USER STORE - Enhanced authentication store ===
 export const useUserStore = create(
   persist(
     immer((set, get) => ({
       user: null,
       isAuthenticated: false,
       token: null,
+      isLoading: false,
+      error: null,
       
       setUser: (user, token) => {
         set((state) => {
           state.user = user;
           state.token = token;
           state.isAuthenticated = !!user;
+          state.error = null;
         });
         
         if (token) {
           localStorage.setItem('auth_token', token);
+        }
+      },
+      
+      login: async (email, password) => {
+        set((state) => {
+          state.isLoading = true;
+          state.error = null;
+        });
+        
+        try {
+          const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Login failed');
+          }
+          
+          const data = await response.json();
+          
+          set((state) => {
+            state.user = data.user;
+            state.token = data.access_token;
+            state.isAuthenticated = true;
+            state.isLoading = false;
+            state.error = null;
+          });
+          
+          localStorage.setItem('auth_token', data.access_token);
+          
+          return { success: true, user: data.user };
+          
+        } catch (error) {
+          set((state) => {
+            state.isLoading = false;
+            state.error = error.message;
+          });
+          
+          return { success: false, error: error.message };
+        }
+      },
+      
+      signup: async (userData) => {
+        set((state) => {
+          state.isLoading = true;
+          state.error = null;
+        });
+        
+        try {
+          // Format data to match backend expectations
+          const signupData = {
+            email: userData.email,
+            password: userData.password,
+            full_name: `${userData.firstName} ${userData.lastName}`.trim(),
+            phone: userData.phone || null
+          };
+          
+          const response = await fetch('http://localhost:8000/api/v1/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(signupData),
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Registration failed');
+          }
+          
+          const data = await response.json();
+          
+          set((state) => {
+            state.user = data.user;
+            state.token = data.access_token;
+            state.isAuthenticated = true;
+            state.isLoading = false;
+            state.error = null;
+          });
+          
+          localStorage.setItem('auth_token', data.access_token);
+          
+          return { success: true, user: data.user };
+          
+        } catch (error) {
+          set((state) => {
+            state.isLoading = false;
+            state.error = error.message;
+          });
+          
+          return { success: false, error: error.message };
+        }
+      },
+      
+      forgotPassword: async (email) => {
+        set((state) => {
+          state.isLoading = true;
+          state.error = null;
+        });
+        
+        try {
+          const response = await fetch('http://localhost:8000/api/v1/auth/forgot-password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Failed to send reset email');
+          }
+          
+          set((state) => {
+            state.isLoading = false;
+          });
+          
+          return { success: true };
+          
+        } catch (error) {
+          set((state) => {
+            state.isLoading = false;
+            state.error = error.message;
+          });
+          
+          return { success: false, error: error.message };
+        }
+      },
+      
+      resetPassword: async (token, newPassword) => {
+        set((state) => {
+          state.isLoading = true;
+          state.error = null;
+        });
+        
+        try {
+          const response = await fetch('http://localhost:8000/api/v1/auth/reset-password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token, new_password: newPassword }),
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Password reset failed');
+          }
+          
+          set((state) => {
+            state.isLoading = false;
+          });
+          
+          return { success: true };
+          
+        } catch (error) {
+          set((state) => {
+            state.isLoading = false;
+            state.error = error.message;
+          });
+          
+          return { success: false, error: error.message };
+        }
+      },
+      
+      clearError: () => {
+        set((state) => {
+          state.error = null;
+        });
+      },
+      
+      // Initialize auth from localStorage
+      initializeAuth: () => {
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+          // Verify token is still valid by making a request to get current user
+          fetch('http://localhost:8000/api/v1/auth/me', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          })
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error('Token invalid');
+            }
+          })
+          .then(userData => {
+            set((state) => {
+              state.user = userData;
+              state.token = token;
+              state.isAuthenticated = true;
+            });
+          })
+          .catch(() => {
+            localStorage.removeItem('auth_token');
+            set((state) => {
+              state.user = null;
+              state.token = null;
+              state.isAuthenticated = false;
+            });
+          });
         }
       },
       
@@ -374,6 +586,7 @@ export const useUserStore = create(
           state.user = null;
           state.token = null;
           state.isAuthenticated = false;
+          state.error = null;
         });
         
         localStorage.removeItem('auth_token');

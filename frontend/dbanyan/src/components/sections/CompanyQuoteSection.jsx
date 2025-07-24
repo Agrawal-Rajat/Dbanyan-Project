@@ -24,7 +24,7 @@ const CompanyQuoteSection = () => {
         }}
       />
 
-      <Container size="lg" className="relative z-10">
+      <Container size="lg" className="relative z-10 flex flex-col items-center justify-center text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -51,18 +51,22 @@ const CompanyQuoteSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             viewport={{ once: true }}
+            className="flex flex-col items-center justify-center text-center"
           >
             <Title 
               order={2} 
-              className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8 leading-tight"
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8 leading-tight text-center"
               style={{ 
                 fontFamily: '"Lora", serif',
-                fontStyle: 'italic'
+                fontStyle: 'italic',
+                textAlign: 'center',
+                width: '100%',
+                margin: '0 auto'
               }}
             >
               "We believe that nature holds the key to vibrant health. 
               Our mission is to bring you the purest Moringa products 
-              that don\'t just nourish your body, but transform your life."
+              that don't just nourish your body, but transform your life."
             </Title>
           </motion.div>
 
@@ -96,7 +100,7 @@ const CompanyQuoteSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7 }}
             viewport={{ once: true }}
-            className="mt-12 max-w-4xl mx-auto"
+            className="mt-12 max-w-4xl mx-auto text-center flex flex-col items-center justify-center"
           >
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
               <Text 

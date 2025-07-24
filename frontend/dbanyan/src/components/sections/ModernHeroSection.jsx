@@ -79,12 +79,12 @@ const ModernHeroSection = () => {
           className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]"
         >
           {/* Left Column - Content */}
-          <div className="text-center lg:text-left">
+          <div className="flex flex-col items-center justify-center text-center w-full">
             <motion.div variants={textVariants}>
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 backdrop-blur-sm border border-emerald-200 mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 backdrop-blur-sm border border-emerald-200 mb-6 mx-auto" style={{ textAlign: 'center' }}>
                 <IconLeaf className="w-4 h-4 text-emerald-600" />
-                <Text size="sm" fw={600} className="text-emerald-800">
+                <Text size="sm" fw={600} className="text-emerald-800" style={{ textAlign: 'center' }}>
                   100% Pure & Natural
                 </Text>
               </div>
@@ -93,13 +93,14 @@ const ModernHeroSection = () => {
             <motion.div variants={textVariants}>
               <Title 
                 order={1}
-                className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6"
+                className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-center"
                 style={{ 
-                  fontFamily: '"Lora", serif',
+                  fontFamily: 'Lora, serif',
                   background: 'linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
-                  lineHeight: '1.1'
+                  lineHeight: '1.1',
+                  textAlign: 'center'
                 }}
               >
                 Unlock Nature's
@@ -119,8 +120,8 @@ const ModernHeroSection = () => {
             <motion.div variants={textVariants}>
               <Text 
                 size="xl" 
-                className="text-gray-700 leading-relaxed mb-8 max-w-lg"
-                style={{ fontFamily: '"Inter", sans-serif' }}
+                className="text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto text-center"
+                style={{ fontFamily: 'Inter, sans-serif', textAlign: 'center' }}
               >
                 Experience the transformative power of pure Moringa. 
                 <strong className="text-emerald-700"> No preservatives, no additives</strong> – 
@@ -205,8 +206,8 @@ const ModernHeroSection = () => {
                 }}
               >
                 <img
-                  src="https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?q=80&w=1000&auto=format&fit=crop"
-                  alt="Fresh Moringa leaves in natural sunlight"
+                  src="/images/moringaHeroPic.jpg"
+                  alt="Moringa leaves, powder, and tea - premium organic"
                   className="w-full h-96 lg:h-[500px] object-cover"
                   style={{
                     filter: 'brightness(1.1) contrast(1.05)'

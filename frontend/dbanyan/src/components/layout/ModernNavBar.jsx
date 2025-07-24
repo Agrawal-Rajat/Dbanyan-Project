@@ -6,7 +6,7 @@ import { Container, Group, Button, Menu, Burger, Drawer, Stack, UnstyledButton, 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
-import { useCartStore, useAuthStore } from '../../store';
+import { useCartStore, useUserStore } from '../../store';
 import { 
   IconLeaf, 
   IconShoppingCart, 
@@ -27,7 +27,7 @@ const ModernNavBar = () => {
   // Store states
   const cartItems = useCartStore(state => state.items);
   const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const { user, isAuthenticated, logout } = useUserStore();
 
   // Scroll effect
   useEffect(() => {
@@ -153,10 +153,10 @@ const ModernNavBar = () => {
                   <Menu.Target>
                     <UnstyledButton className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
                       <Avatar size="sm" className="bg-emerald-500">
-                        {user?.firstName?.charAt(0) || 'U'}
+                        {user?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
                       </Avatar>
                       <Text size="sm" fw={500} style={{ fontFamily: '"Inter", sans-serif' }}>
-                        {user?.firstName || 'User'}
+                        {user?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'User'}
                       </Text>
                       <IconChevronDown className="w-4 h-4 text-gray-500" />
                     </UnstyledButton>
@@ -179,7 +179,10 @@ const ModernNavBar = () => {
                     <Menu.Divider />
                     <Menu.Item 
                       leftSection={<IconLogout className="w-4 h-4" />}
-                      onClick={logout}
+                      onClick={() => {
+                        logout();
+                        navigate('/');
+                      }}
                       color="red"
                     >
                       Logout
