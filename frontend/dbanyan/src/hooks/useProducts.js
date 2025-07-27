@@ -8,7 +8,7 @@ export const useProducts = () => {
   return useQuery({
     queryKey: ['products'],
     queryFn: async () => {
-      const response = await api.get('/products');
+      const response = await api.get('/products/');
       return response.data;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes

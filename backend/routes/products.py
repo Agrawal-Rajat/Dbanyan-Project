@@ -23,7 +23,7 @@ async def get_products(
     page: int = Query(1, ge=1),
     per_page: int = Query(10, ge=1, le=50),
     sort_by: str = Query("created_at", regex="^(name|price|created_at|updated_at)$"),
-    sort_order: int = Query(-1, regex="^(-1|1)$"),
+    sort_order: int = Query(-1, ge=-1, le=1),
     db: AsyncIOMotorDatabase = Depends(get_database)
 ):
     """

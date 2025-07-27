@@ -4,7 +4,7 @@
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { useAuthStore } from '../store';
+import { useUserStore } from '../store';
 
 // Modern Components
 import ModernNavBar from '../components/layout/ModernNavBar';
@@ -16,12 +16,7 @@ import ModernProductsSection from '../components/sections/ModernProductsSection'
 import ModernFooter from '../components/layout/ModernFooter';
 
 const ModernLandingPage = () => {
-  const { checkAuth } = useAuthStore();
-
-  // Check authentication on mount
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+  const { user } = useUserStore();
 
   // Page animation variants
   const pageVariants = {

@@ -38,18 +38,23 @@ import {
   IconTrendingUp,
   IconLogout,
   IconSettings,
-  IconMail
+  IconMail,
+  IconChartBar
 } from '@tabler/icons-react';
 import { useForm } from '@mantine/form';
-import { useAuthStore } from '../store';
+import { useUserStore } from '../store';
 import { useProducts } from '../hooks/useProducts';
 import { api } from '../services/api';
 import { useQuery } from '@tanstack/react-query';
 import ModernNavBar from '../components/layout/ModernNavBar';
+import ProductManagement from '../components/admin/ProductManagement';
+import OrderManagement from '../components/admin/OrderManagement';
+import UserManagement from '../components/admin/UserManagement';
+import AnalyticsDashboard from '../components/admin/AnalyticsDashboard';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
+  const { user, isLoading: authLoading, logout } = useUserStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
@@ -61,36 +66,58 @@ const AdminDashboard = () => {
     queryFn: async () => {
       const response = await api.get('/orders/admin/all');
       return response.data;
-    }
+    },
+    enabled: !!user && user.role === 'admin',
+    retry: 2
   });
   const { data: users, isLoading: usersLoading } = useQuery({
     queryKey: ['admin-users'],
     queryFn: async () => {
       const response = await api.get('/auth/admin/users');
       return response.data;
-    }
+    },
+    enabled: !!user && user.role === 'admin' && !!localStorage.getItem('auth_token'),
+    retry: false // Don't retry failed requests
   });
   const { data: orderStats } = useQuery({
     queryKey: ['admin-order-stats'],
     queryFn: async () => {
       const response = await api.get('/orders/admin/stats');
       return response.data;
-    }
+    },
+    enabled: !!user && user.role === 'admin' && !!localStorage.getItem('auth_token'),
+    retry: false
   });
   const { data: userStats } = useQuery({
     queryKey: ['admin-user-stats'],
     queryFn: async () => {
       const response = await api.get('/auth/admin/stats');
       return response.data;
-    }
+    },
+    enabled: !!user && user.role === 'admin' && !!localStorage.getItem('auth_token'),
+    retry: false
   });
 
   // Check if user is admin
   useEffect(() => {
-    if (!user || user.role !== 'admin') {
-      navigate('/login');
+    // Only redirect if we're sure auth is loaded and user is not admin
+    if (!authLoading) {
+      if (!user) {
+        navigate('/login');
+      } else if (user.role !== 'admin') {
+        navigate('/login');
+      }
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
+
+  // Show loading while auth is being checked
+  if (authLoading) {
+    return (
+      <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <Loader size="xl" />
+      </Box>
+    );
+  }
 
   // Product form
   const form = useForm({
@@ -266,10 +293,36 @@ const AdminDashboard = () => {
         <Container size="xl" className="py-8">
           <Tabs value={activeTab} onChange={setActiveTab}>
             <Tabs.List>
-              <Tabs.Tab value="overview">Overview</Tabs.Tab>
-              <Tabs.Tab value="products">Products</Tabs.Tab>
-              <Tabs.Tab value="orders">Orders</Tabs.Tab>
-              <Tabs.Tab value="customers">Customers</Tabs.Tab>
+              <Tabs.Tab 
+                value="overview" 
+                leftSection={<IconTrendingUp size={16} />}
+              >
+                Overview
+              </Tabs.Tab>
+              <Tabs.Tab 
+                value="analytics" 
+                leftSection={<IconChartBar size={16} />}
+              >
+                Analytics
+              </Tabs.Tab>
+              <Tabs.Tab 
+                value="products" 
+                leftSection={<IconPackage size={16} />}
+              >
+                Products
+              </Tabs.Tab>
+              <Tabs.Tab 
+                value="orders" 
+                leftSection={<IconShoppingCart size={16} />}
+              >
+                Orders
+              </Tabs.Tab>
+              <Tabs.Tab 
+                value="customers" 
+                leftSection={<IconUsers size={16} />}
+              >
+                Customers
+              </Tabs.Tab>
             </Tabs.List>
 
             {/* Overview Tab */}
@@ -306,124 +359,20 @@ const AdminDashboard = () => {
               </Grid>
             </Tabs.Panel>
 
+            {/* Analytics Tab */}
+            <Tabs.Panel value="analytics" className="mt-6">
+              <AnalyticsDashboard />
+            </Tabs.Panel>
+
             {/* Products Tab */}
             <Tabs.Panel value="products" className="mt-6">
-              <Card shadow="sm" padding="lg" radius="md">
-                <Group justify="space-between" className="mb-6">
-                  <Title order={3} className="text-gray-800">
-                    Product Management
-                  </Title>
-                  <Button 
-                    leftSection={<IconPlus size={16} />}
-                    onClick={() => {
-                      setEditingProduct(null);
-                      form.reset();
-                      setModalOpen(true);
-                    }}
-                  >
-                    Add Product
-                  </Button>
-                </Group>
-
-                <Box className="overflow-x-auto">
-                  <Table>
-                    <Table.Thead>
-                      <Table.Tr>
-                        <Table.Th>Product</Table.Th>
-                        <Table.Th>Category</Table.Th>
-                        <Table.Th>Price</Table.Th>
-                        <Table.Th>Stock</Table.Th>
-                        <Table.Th>Status</Table.Th>
-                        <Table.Th>Actions</Table.Th>
-                      </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody>
-                      {displayProducts.map((product) => (
-                        <Table.Tr key={product.uid}>
-                          <Table.Td>
-                            <Box>
-                              <Text className="font-medium">{product.name}</Text>
-                              <Text size="sm" className="text-gray-600">
-                                {product.short_description}
-                              </Text>
-                            </Box>
-                          </Table.Td>
-                          <Table.Td>
-                            <Badge variant="light" color="blue">
-                              {product.category}
-                            </Badge>
-                          </Table.Td>
-                          <Table.Td>₹{product.price}</Table.Td>
-                          <Table.Td>
-                            <Badge 
-                              variant="light" 
-                              color={product.quantity > 10 ? 'green' : product.quantity > 0 ? 'yellow' : 'red'}
-                            >
-                              {product.quantity}
-                            </Badge>
-                          </Table.Td>
-                          <Table.Td>
-                            <Badge 
-                              variant="light" 
-                              color={product.is_active ? 'green' : 'red'}
-                            >
-                              {product.is_active ? 'Active' : 'Inactive'}
-                            </Badge>
-                          </Table.Td>
-                          <Table.Td>
-                            <Group gap="xs">
-                              <ActionIcon 
-                                variant="light" 
-                                color="blue"
-                                onClick={() => handleEdit(product)}
-                              >
-                                <IconEdit size={16} />
-                              </ActionIcon>
-                              <ActionIcon 
-                                variant="light" 
-                                color="red"
-                                onClick={() => handleDelete(product.uid)}
-                              >
-                                <IconTrash size={16} />
-                              </ActionIcon>
-                            </Group>
-                          </Table.Td>
-                        </Table.Tr>
-                      ))}
-                    </Table.Tbody>
-                  </Table>
-                </Box>
-              </Card>
-            </Tabs.Panel>
-
-            {/* Orders Tab */}
-            <Tabs.Panel value="orders" className="mt-6">
-              <Card shadow="sm" padding="lg" radius="md">
-                <Title order={3} className="text-gray-800 mb-6">
-                  Order Management
-                </Title>
-                <Alert color="blue" variant="light">
-                  Order management system will be implemented in the next phase.
-                </Alert>
-              </Card>
-            </Tabs.Panel>
-
-            {/* Customers Tab */}
-            <Tabs.Panel value="customers" className="mt-6">
-              <Card shadow="sm" padding="lg" radius="md">
-                <Title order={3} className="text-gray-800 mb-6">
-                  Customer Management
-                </Title>
-                <Alert color="blue" variant="light">
-                  Customer management system will be implemented in the next phase.
-                </Alert>
-              </Card>
+              <ProductManagement />
             </Tabs.Panel>
           </Tabs>
         </Container>
       </Box>
 
-      {/* Product Modal */}
+      {/* Legacy Product Modal - Keeping for backward compatibility */}
       <Modal
         opened={modalOpen}
         onClose={() => {

@@ -548,6 +548,10 @@ export const useUserStore = create(
       
       // Initialize auth from localStorage
       initializeAuth: () => {
+        set((state) => {
+          state.isLoading = true;
+        });
+        
         const token = localStorage.getItem('auth_token');
         if (token) {
           // Verify token is still valid by making a request to get current user
@@ -568,6 +572,7 @@ export const useUserStore = create(
               state.user = userData;
               state.token = token;
               state.isAuthenticated = true;
+              state.isLoading = false;
             });
           })
           .catch(() => {
@@ -576,7 +581,12 @@ export const useUserStore = create(
               state.user = null;
               state.token = null;
               state.isAuthenticated = false;
+              state.isLoading = false;
             });
+          });
+        } else {
+          set((state) => {
+            state.isLoading = false;
           });
         }
       },
@@ -623,266 +633,3 @@ calculateTax: (taxableAmount) => {
   return taxableAmount * 0.18; // 18% GST
 }
 };
-
-// === AUTHENTICATION STORE - JWT-based auth with guest/admin flow ===
-export const useAuthStore = create(
-persist(
-  immer((set, get) => ({
-    user: null,
-    token: null,
-    isAuthenticated: false,
-    isLoading: false,
-    error: null,
-    
-    // Login action
-    login: async (email, password) => {
-      set((state) => {
-        state.isLoading = true;
-        state.error = null;
-      });
-      
-      try {
-        const response = await fetch(`http://localhost:8000/api/v1/auth/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password })
-        });
-        
-        if (!response.ok) {
-          throw new Error('Invalid credentials');
-        }
-        
-        const data = await response.json();
-        
-        set((state) => {
-          state.user = data.user;
-          state.token = data.access_token;
-          state.isAuthenticated = true;
-          state.isLoading = false;
-          state.error = null;
-        });
-        
-        return { success: true, user: data.user };
-      } catch (error) {
-        set((state) => {
-          state.isLoading = false;
-          state.error = error.message;
-        });
-        return { success: false, error: error.message };
-      }
-    },
-    
-    // Signup action
-    signup: async (userData) => {
-      set((state) => {
-        state.isLoading = true;
-        state.error = null;
-      });
-      
-      try {
-        const response = await fetch(`http://localhost:8000/api/v1/auth/register`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData)
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || 'Signup failed');
-        }
-        
-        const data = await response.json();
-        
-        set((state) => {
-          state.user = data.user;
-          state.token = data.access_token;
-          state.isAuthenticated = true;
-          state.isLoading = false;
-          state.error = null;
-        });
-        
-        return { success: true, user: data.user };
-      } catch (error) {
-        set((state) => {
-          state.isLoading = false;
-          state.error = error.message;
-        });
-        return { success: false, error: error.message };
-      }
-    },
-    
-    // Logout action
-    logout: () => {
-      set((state) => {
-        state.user = null;
-        state.token = null;
-        state.isAuthenticated = false;
-        state.error = null;
-      });
-    },
-    
-    // Forgot password
-    forgotPassword: async (email) => {
-      set((state) => {
-        state.isLoading = true;
-        state.error = null;
-      });
-      
-      try {
-        const response = await fetch(`http://localhost:8000/api/v1/auth/forgot-password`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email })
-        });
-        
-        if (!response.ok) {
-          throw new Error('Failed to send reset email');
-        }
-        
-        set((state) => {
-          state.isLoading = false;
-        });
-        
-        return { success: true };
-      } catch (error) {
-        set((state) => {
-          state.isLoading = false;
-          state.error = error.message;
-        });
-        return { success: false, error: error.message };
-      }
-    },
-    
-    // Reset password
-    resetPassword: async (token, newPassword) => {
-      set((state) => {
-        state.isLoading = true;
-        state.error = null;
-      });
-      
-      try {
-        const response = await fetch(`http://localhost:8000/api/v1/auth/reset-password`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ token, new_password: newPassword })
-        });
-        
-        if (!response.ok) {
-          throw new Error('Failed to reset password');
-        }
-        
-        set((state) => {
-          state.isLoading = false;
-        });
-        
-        return { success: true };
-      } catch (error) {
-        set((state) => {
-          state.isLoading = false;
-          state.error = error.message;
-        });
-        return { success: false, error: error.message };
-      }
-    },
-    
-    // Clear error
-    clearError: () => {
-      set((state) => {
-        state.error = null;
-      });
-    },
-    
-    // Update user profile
-    updateProfile: async (userData) => {
-      const { token } = get();
-      
-      set((state) => {
-        state.isLoading = true;
-        state.error = null;
-      });
-      
-      try {
-        const response = await fetch(`http://localhost:8000/api/v1/auth/profile`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(userData)
-        });
-        
-        if (!response.ok) {
-          throw new Error('Failed to update profile');
-        }
-        
-        const data = await response.json();
-        
-        set((state) => {
-          state.user = data.user;
-          state.isLoading = false;
-        });
-        
-        return { success: true };
-      } catch (error) {
-        set((state) => {
-          state.isLoading = false;
-          state.error = error.message;
-        });
-        return { success: false, error: error.message };
-      }
-    },
-    
-    // Check authentication status
-    checkAuth: async () => {
-      const { token } = get();
-      
-      if (!token) {
-        return false;
-      }
-      
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/auth/me`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        if (!response.ok) {
-          // Token is invalid, logout
-          get().logout();
-          return false;
-        }
-        
-        const data = await response.json();
-        
-        set((state) => {
-          state.user = data.user;
-          state.isAuthenticated = true;
-        });
-        
-        return true;
-      } catch (error) {
-        get().logout();
-        return false;
-      }
-    }
-  })),
-  {
-    name: 'dbanyan-auth',
-    storage: createJSONStorage(() => localStorage),
-    partialize: (state) => ({
-      user: state.user,
-      token: state.token,
-      isAuthenticated: state.isAuthenticated
-    })
-  }
-)
-);

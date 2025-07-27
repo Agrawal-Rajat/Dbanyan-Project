@@ -46,8 +46,8 @@ class ProductBase(BaseModel):
     description: str = Field(..., min_length=10, max_length=2000)
     short_description: str = Field(..., min_length=10, max_length=500)
     category: ProductCategory
-    price: Decimal = Field(..., gt=0, decimal_places=2)
-    compare_at_price: Optional[Decimal] = Field(None, gt=0, decimal_places=2)
+    price: Decimal = Field(..., gt=0)
+    compare_at_price: Optional[Decimal] = Field(None, gt=0)
     images: List[ProductImage] = Field(default_factory=list)
     ingredients: List[str] = Field(default_factory=list)
     benefits: List[str] = Field(default_factory=list)
@@ -57,6 +57,12 @@ class ProductBase(BaseModel):
     is_preservative_free: bool = True  # FR2.3 requirement
     seo_title: Optional[str] = None
     seo_description: Optional[str] = None
+
+    @validator('price', 'compare_at_price')
+    def validate_price_precision(cls, v):
+        if v is not None and v.as_tuple().exponent < -2:
+            raise ValueError('Price cannot have more than 2 decimal places')
+        return v
 
 
 class ProductCreate(ProductBase):
@@ -69,9 +75,15 @@ class ProductUpdate(BaseModel):
     name: Optional[str] = Field(None, min_length=1, max_length=200)
     description: Optional[str] = Field(None, min_length=10, max_length=2000)
     short_description: Optional[str] = Field(None, min_length=10, max_length=500)
-    price: Optional[Decimal] = Field(None, gt=0, decimal_places=2)
-    compare_at_price: Optional[Decimal] = Field(None, gt=0, decimal_places=2)
+    price: Optional[Decimal] = Field(None, gt=0)
+    compare_at_price: Optional[Decimal] = Field(None, gt=0)
     quantity: Optional[int] = Field(None, ge=0)
+
+    @validator('price', 'compare_at_price')
+    def validate_price_precision(cls, v):
+        if v is not None and v.as_tuple().exponent < -2:
+            raise ValueError('Price cannot have more than 2 decimal places')
+        return v
     images: Optional[List[ProductImage]] = None
     ingredients: Optional[List[str]] = None
     benefits: Optional[List[str]] = None
@@ -117,8 +129,14 @@ class OrderItem(BaseModel):
     product_uid: UUID
     product_name: str
     quantity: int = Field(..., gt=0)
-    unit_price: Decimal = Field(..., gt=0, decimal_places=2)
-    total_price: Decimal = Field(..., gt=0, decimal_places=2)
+    unit_price: Decimal = Field(..., gt=0)
+    total_price: Decimal = Field(..., gt=0)
+
+    @validator('unit_price', 'total_price')
+    def validate_price_precision(cls, v):
+        if v is not None and v.as_tuple().exponent < -2:
+            raise ValueError('Price cannot have more than 2 decimal places')
+        return v
 
 
 class ShippingAddress(BaseModel):
@@ -152,11 +170,11 @@ class Order(BaseModel):
     shipping_address: ShippingAddress
     
     # Pricing
-    subtotal: Decimal = Field(..., gt=0, decimal_places=2)
-    discount_amount: Decimal = Field(default=Decimal('0.00'), ge=0, decimal_places=2)
-    shipping_cost: Decimal = Field(default=Decimal('0.00'), ge=0, decimal_places=2)
-    tax_amount: Decimal = Field(default=Decimal('0.00'), ge=0, decimal_places=2)
-    total_amount: Decimal = Field(..., gt=0, decimal_places=2)
+    subtotal: Decimal = Field(..., gt=0)
+    discount_amount: Decimal = Field(default=Decimal('0.00'), ge=0)
+    shipping_cost: Decimal = Field(default=Decimal('0.00'), ge=0)
+    tax_amount: Decimal = Field(default=Decimal('0.00'), ge=0)
+    total_amount: Decimal = Field(..., gt=0)
     
     # Payment
     razorpay_order_id: Optional[str] = None
@@ -175,6 +193,12 @@ class Order(BaseModel):
     confirmed_at: Optional[datetime] = None
     shipped_at: Optional[datetime] = None
     delivered_at: Optional[datetime] = None
+
+    @validator('subtotal', 'discount_amount', 'shipping_cost', 'tax_amount', 'total_amount')
+    def validate_price_precision(cls, v):
+        if v is not None and v.as_tuple().exponent < -2:
+            raise ValueError('Price cannot have more than 2 decimal places')
+        return v
 
 
 # =============== USER MODELS ===============

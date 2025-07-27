@@ -143,7 +143,7 @@ async def register(
             detail=f"Registration failed: {str(e)}"
         )
 
-@router.post("/login")
+@router.post("/login", response_model=Token)
 async def login(
     credentials: UserLogin,
     db: AsyncIOMotorDatabase = Depends(get_database)
@@ -151,18 +151,21 @@ async def login(
     """User login with email and password"""
     try:
         auth_service = AuthService(db)
-        result = await auth_service.authenticate_user(credentials.email, credentials.password)
+        user = await auth_service.authenticate_user(credentials)
         
-        if not result["success"]:
+        if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=result["message"]
+                detail="Invalid email or password"
             )
         
+        # Generate token
+        access_token = auth_service.create_access_token(user)
+        
         return {
-            "access_token": result["access_token"],
+            "access_token": access_token,
             "token_type": "bearer",
-            "user": result["user"]
+            "user": UserResponse(**user.model_dump())
         }
         
     except HTTPException:
@@ -272,6 +275,7 @@ async def reset_password(
 async def get_all_users_admin(
     skip: int = 0,
     limit: int = 100,
+    admin_user: UserResponse = Depends(get_admin_user),
     db: AsyncIOMotorDatabase = Depends(get_database)
 ):
     """
@@ -291,6 +295,7 @@ async def get_all_users_admin(
 
 @router.get("/admin/stats")
 async def get_user_stats_admin(
+    admin_user: UserResponse = Depends(get_admin_user),
     db: AsyncIOMotorDatabase = Depends(get_database)
 ):
     """
@@ -470,44 +475,6 @@ async def register(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Registration failed"
-        )
-
-
-@router.post("/login", response_model=Token)
-async def login(
-    login_data: UserLogin,
-    auth_service: AuthService = Depends(get_auth_service)
-):
-    """Login user"""
-    try:
-        user = await auth_service.authenticate_user(login_data)
-        
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid email or password"
-            )
-        
-        if not user.is_active:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Account is deactivated"
-            )
-        
-        access_token = auth_service.create_access_token(user)
-        user_response = UserResponse(**user.model_dump())
-        
-        return Token(
-            access_token=access_token,
-            user=user_response
-        )
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Login failed"
         )
 
 

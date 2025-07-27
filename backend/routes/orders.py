@@ -8,8 +8,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from db import get_database
-from models import Order, OrderCreate, OrderStatus, ResponseModel
+from models import Order, OrderCreate, OrderStatus, ResponseModel, UserResponse
 from services import OrderService
+from .auth import get_admin_user
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
@@ -203,6 +204,7 @@ async def get_all_orders_admin(
     skip: int = 0,
     limit: int = 100,
     status_filter: Optional[str] = None,
+    admin_user: UserResponse = Depends(get_admin_user),
     db: AsyncIOMotorDatabase = Depends(get_database)
 ):
     """
@@ -222,6 +224,7 @@ async def get_all_orders_admin(
 
 @router.get("/admin/stats")
 async def get_order_stats_admin(
+    admin_user: UserResponse = Depends(get_admin_user),
     db: AsyncIOMotorDatabase = Depends(get_database)
 ):
     """

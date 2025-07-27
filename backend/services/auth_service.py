@@ -6,7 +6,7 @@ from typing import Optional, Dict, Any, List
 from uuid import UUID
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
-import jwt
+from jose import jwt
 
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from models import User, UserCreate, UserLogin, UserResponse, Token, UserRole
@@ -64,8 +64,14 @@ class AuthService:
             if not user_doc:
                 return None
             
-            # Convert to User model
-            user_doc['uid'] = UUID(user_doc['uid'])
+            # Convert MongoDB document to User model
+            # Remove MongoDB _id and convert uid to UUID
+            if '_id' in user_doc:
+                del user_doc['_id']
+            
+            if 'uid' in user_doc and isinstance(user_doc['uid'], str):
+                user_doc['uid'] = UUID(user_doc['uid'])
+            
             user = User(**user_doc)
             
             # Verify password
@@ -126,7 +132,7 @@ class AuthService:
         try:
             payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
             return payload
-        except jwt.PyJWTError:
+        except jwt.JWTError:
             return None
     
     def hash_password(self, password: str) -> str:
@@ -275,7 +281,9 @@ class AuthService:
             
             users = []
             async for user_doc in cursor:
-                # Convert UUID fields
+                # Remove MongoDB ObjectId and convert UUID fields
+                if '_id' in user_doc:
+                    del user_doc['_id']
                 user_doc['uid'] = str(user_doc['uid'])
                 users.append(user_doc)
             

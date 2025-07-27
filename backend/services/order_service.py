@@ -374,6 +374,9 @@ class OrderService:
             orders = []
             
             async for order_doc in cursor:
+                # Remove MongoDB ObjectId
+                if '_id' in order_doc:
+                    del order_doc['_id']
                 order_doc['uid'] = UUID(order_doc['uid'])
                 orders.append(Order(**order_doc))
             

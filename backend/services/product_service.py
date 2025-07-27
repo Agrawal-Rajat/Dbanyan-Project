@@ -88,6 +88,9 @@ class ProductService:
             # Convert to Pydantic models
             products = []
             for doc in products_docs:
+                # Remove MongoDB ObjectId
+                if '_id' in doc:
+                    del doc['_id']
                 doc['uid'] = UUID(doc['uid'])
                 products.append(Product(**doc))
             

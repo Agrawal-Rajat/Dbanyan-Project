@@ -25,7 +25,7 @@ import {
   ActionIcon
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
-import { useCartStore, useUIStore, useAuthStore } from '../store';
+import { useCartStore, useUIStore, useUserStore } from '../store';
 import { paymentService } from '../services/paymentService';
 import { 
   IconShoppingCart, 
@@ -50,7 +50,7 @@ import {
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const { items, total, removeItem, updateQuantity, clearCart } = useCartStore();
-  const { user } = useAuthStore();
+  const { user } = useUserStore();
   const addNotification = useUIStore(state => state.addNotification);
   
   const [activeStep, setActiveStep] = useState(0);
