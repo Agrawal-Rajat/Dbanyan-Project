@@ -82,9 +82,9 @@ const ModernHeroSection = () => {
           <div className="flex flex-col items-center justify-center text-center w-full">
             <motion.div variants={textVariants}>
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 backdrop-blur-sm border border-emerald-200 mb-6 mx-auto" style={{ textAlign: 'center' }}>
-                <IconLeaf className="w-4 h-4 text-emerald-600" />
-                <Text size="sm" fw={600} className="text-emerald-800" style={{ textAlign: 'center' }}>
+              <div className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-white/70 backdrop-blur-sm border border-emerald-200 mb-6 mx-auto">
+                <IconLeaf className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                <Text size="sm" fw={600} className="text-emerald-800 leading-none">
                   Moringify Your Wellness
                 </Text>
               </div>
@@ -138,10 +138,10 @@ const ModernHeroSection = () => {
                   { icon: IconHeart, text: 'Wellness Revolution' }
                 ].map((feature, index) => (
                   <div key={index} className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
                       <feature.icon className="w-4 h-4 text-emerald-600" />
                     </div>
-                    <Text size="sm" fw={500} className="text-gray-700">
+                    <Text size="sm" fw={500} className="text-gray-700 leading-none">
                       {feature.text}
                     </Text>
                   </div>

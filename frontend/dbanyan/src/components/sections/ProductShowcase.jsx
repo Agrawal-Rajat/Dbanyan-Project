@@ -5,65 +5,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Container, Title, Card, Text, Button, Badge, Grid, Loader, Alert } from '@mantine/core';
-import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../../store';
+import { useProducts } from '../../hooks/useProducts';
 
-// Mock API call - will be replaced with real API (Protocol 1.3)
-const fetchProducts = async () => {
-  // Simulating API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Mock product data following our brand - Indian market pricing
-  return [
-    {
-      id: 1,
-      name: 'Moringa Powder',
-      price: 299,
-      image: '/images/moringaPowderPic.jpg',
-      description: 'Pure, nutrient-rich moringa powder for daily wellness.',
-      inStock: true,
-      quantity: 50
-    },
-    {
-      id: 2,
-      name: 'Moringa Paste',
-      price: 349,
-      image: '/images/moringaPastePic.jpg',
-      description: 'Fresh moringa paste for culinary and health uses.',
-      inStock: true,
-      quantity: 30
-    },
-    {
-      id: 3,
-      name: 'Moringa Drumstick',
-      price: 199,
-      image: '/images/moringaFruitPic.jpg',
-      description: 'Nutritious moringa drumsticks (pods) for cooking.',
-      inStock: true,
-      quantity: 40
-    },
-    {
-      id: 4,
-      name: 'Moringa Dry Flower',
-      price: 259,
-      image: '/images/moringaFlowerPic.jpg',
-      description: 'Dried moringa flowers for tea and wellness.',
-      inStock: true,
-      quantity: 20
-    }
-  ];
-};
+// Products will be fetched from API using useProducts hook
 
 const ProductShowcase = () => {
   const navigate = useNavigate();
   const addToCart = useCartStore(state => state.addItem);
 
-  // TanStack Query for data fetching (Protocol 1.3)
-  const { data: products, isLoading, isError, error } = useQuery({
-    queryKey: ['featured-products'],
-    queryFn: fetchProducts,
-  });
+  // Fetch products using useProducts hook
+  const { data: productsResponse, isLoading, isError, error } = useProducts();
+  const products = productsResponse?.data || [];
 
   // Animation variants for staggered card animation (FR1.5)
   const containerVariants = {

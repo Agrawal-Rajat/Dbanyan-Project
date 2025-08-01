@@ -22,9 +22,9 @@ import {
   NumberInput,
   Tabs
 } from '@mantine/core';
-import { useQuery } from '@tanstack/react-query';
 import { useCartStore, useUIStore } from '../store';
 import CartIndicator from '../components/layout/CartIndicator';
+import { useProduct } from '../hooks/useProducts';
 import { IconLeaf } from '@tabler/icons-react';
 
 // Mock API call for individual product (will be replaced with real API)
@@ -177,12 +177,8 @@ const ProductDetailPage = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  // Fetch product data using TanStack Query (Protocol 1.3)
-  const { data: product, isLoading, isError, error } = useQuery({
-    queryKey: ['product', id],
-    queryFn: () => fetchProductById(id),
-    enabled: !!id,
-  });
+  // Fetch product data using useProduct hook
+  const { data: product, isLoading, isError, error } = useProduct(id);
 
   // Animation variants
   const fadeInUp = {

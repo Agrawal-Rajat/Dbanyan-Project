@@ -45,51 +45,7 @@ const ModernProductsSection = () => {
     navigate('/products');
   };
 
-  // Fallback data for when API is loading
-  const fallbackProducts = [
-    {
-      uid: '1',
-      name: 'Moringa Powder',
-      short_description: 'Pure, nutrient-rich moringa powder for daily wellness',
-      price: 299,
-      compare_at_price: 399,
-      images: [{ url: '/images/moringaPowderPic.jpg', alt_text: 'Moringa Powder' }],
-      category: 'powder',
-      is_preservative_free: true
-    },
-    {
-      uid: '2',
-      name: 'Moringa Paste',
-      short_description: 'Fresh moringa paste for culinary and health uses',
-      price: 349,
-      compare_at_price: 449,
-      images: [{ url: '/images/moringaPastePic.jpg', alt_text: 'Moringa Paste' }],
-      category: 'paste',
-      is_preservative_free: true
-    },
-    {
-      uid: '3',
-      name: 'Moringa Drumstick',
-      short_description: 'Nutritious moringa drumsticks (pods) for cooking',
-      price: 199,
-      compare_at_price: 249,
-      images: [{ url: '/images/moringaFruitPic.jpg', alt_text: 'Moringa Drumstick' }],
-      category: 'drumstick',
-      is_preservative_free: true
-    },
-    {
-      uid: '4',
-      name: 'Moringa Dry Flower',
-      short_description: 'Dried moringa flowers for tea and wellness',
-      price: 259,
-      compare_at_price: 329,
-      images: [{ url: '/images/moringaFlowerPic.jpg', alt_text: 'Moringa Dry Flower' }],
-      category: 'dry-flower',
-      is_preservative_free: true
-    }
-  ];
-
-  const displayProducts = products?.data || fallbackProducts;
+  const displayProducts = products?.data || [];
 
   return (
     <Box className="py-20 bg-white">

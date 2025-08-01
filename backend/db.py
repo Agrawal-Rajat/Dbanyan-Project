@@ -40,16 +40,11 @@ async def close_mongo_connection():
         logger.info("Disconnected from MongoDB")
 
 
-def get_database() -> AsyncIOMotorDatabase:
-    """Dependency to get database instance"""
+async def get_database() -> AsyncIOMotorDatabase:
+    """Dependency injection for database access"""
     global database
     if database is None:
         raise Exception("Database not connected")
-    return database
-
-
-async def get_database() -> AsyncIOMotorDatabase:
-    """Dependency injection for database access"""
     return database
 
 

@@ -24,10 +24,9 @@ import {
   Chip,
   NumberInput
 } from '@mantine/core';
-import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore, useUIStore } from '../store';
-import { apiClient } from '../api';
+import { useProducts } from '../hooks/useProducts';
 import CartIndicator from '../components/layout/CartIndicator';
 import { 
   IconSearch, 
@@ -45,73 +44,7 @@ import {
   IconX
 } from '@tabler/icons-react';
 
-// Mock extended product data - will be replaced with real API
-const fetchAllProducts = async () => {
-  await new Promise(resolve => setTimeout(resolve, 800));
-  
-  return [
-    {
-      id: 1,
-      name: 'Moringa Powder',
-      price: 299,
-      originalPrice: 399,
-      image: '/images/moringaPowderPic.jpg',
-      description: 'Pure, nutrient-rich moringa powder for daily wellness.',
-      category: 'Powder',
-      inStock: true,
-      quantity: 50,
-      rating: 4.8,
-      reviews: 124,
-      benefits: ['High in Vitamin C', 'Antioxidant Rich', 'Natural Energy Boost'],
-      weight: '100g'
-    },
-    {
-      id: 2,
-      name: 'Moringa Paste',
-      price: 349,
-      originalPrice: 449,
-      image: '/images/moringaPastePic.jpg',
-      description: 'Fresh moringa paste for culinary and health uses.',
-      category: 'Paste',
-      inStock: true,
-      quantity: 30,
-      rating: 4.7,
-      reviews: 98,
-      benefits: ['Culinary Use', 'Nutrient Dense', 'Versatile'],
-      weight: '200g'
-    },
-    {
-      id: 3,
-      name: 'Moringa Drumstick',
-      price: 199,
-      originalPrice: 249,
-      image: '/images/moringaFruitPic.jpg',
-      description: 'Nutritious moringa drumsticks (pods) for cooking.',
-      category: 'Drumstick',
-      inStock: true,
-      quantity: 40,
-      rating: 4.6,
-      reviews: 89,
-      benefits: ['Rich in Fiber', 'Traditional', 'Healthy'],
-      weight: '500g'
-    },
-    {
-      id: 4,
-      name: 'Moringa Dry Flower',
-      price: 259,
-      originalPrice: 329,
-      image: '/images/moringaFlowerPic.jpg',
-      description: 'Dried moringa flowers for tea and wellness.',
-      category: 'Dry Flower',
-      inStock: true,
-      quantity: 20,
-      rating: 4.5,
-      reviews: 67,
-      benefits: ['Tea', 'Antioxidants', 'Wellness'],
-      weight: '50g'
-    }
-  ];
-};
+// Products will be fetched from API using useProducts hook
 
 const ProductsPage = () => {
   const navigate = useNavigate();
@@ -127,11 +60,9 @@ const ProductsPage = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [wishlist, setWishlist] = useState(new Set());
 
-  // Fetch products using TanStack Query (Protocol 1.3)
-  const { data: products, isLoading, isError, error } = useQuery({
-    queryKey: ['products'],
-    queryFn: fetchAllProducts,
-  });
+  // Fetch products using useProducts hook
+  const { data: productsResponse, isLoading, isError, error } = useProducts();
+  const products = productsResponse?.data || [];
 
   // Enhanced filter and sort products
   const filteredProducts = useMemo(() => {

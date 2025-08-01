@@ -13,19 +13,19 @@ class Settings(BaseSettings):
     # Project Info
     PROJECT_NAME: str = "Dbanyan Group API"
     API_V1_STR: str = "/api/v1"
-    DEBUG: bool = False
+    DEBUG: bool = True
     
     # Database
-    MONGODB_URI: str
+    MONGODB_URI: str = "mongodb://localhost:27017"
     DB_NAME: str = "dbanyan"
     
     # Security
-    JWT_SECRET_KEY: str
+    JWT_SECRET_KEY: str = "dev-secret-key-change-in-production"
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     # CORS
-    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:3000", "http://127.0.0.1:5173"]
+    ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:3000", "http://127.0.0.1:5173", "http://127.0.0.1:5174"]
     
     # Payment Gateway
     RAZORPAY_KEY_ID: str = ""

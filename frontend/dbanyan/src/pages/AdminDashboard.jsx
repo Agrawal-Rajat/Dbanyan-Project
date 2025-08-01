@@ -44,6 +44,8 @@ import {
 import { useForm } from '@mantine/form';
 import { useUserStore } from '../store';
 import { useProducts } from '../hooks/useProducts';
+import { useUsers } from '../hooks/useUsers';
+import { useOrders, useOrderStats } from '../hooks/useOrders';
 import { api } from '../services/api';
 import { useQuery } from '@tanstack/react-query';
 import ProductManagement from '../components/admin/ProductManagement';
@@ -58,44 +60,15 @@ const AdminDashboard = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
 
-  // API hooks
-  const { data: products, isLoading, refetch } = useProducts();
-  const { data: orders, isLoading: ordersLoading } = useQuery({
-    queryKey: ['admin-orders'],
-    queryFn: async () => {
-      const response = await api.get('/orders/admin/all');
-      return response.data;
-    },
-    enabled: !!user && user.role === 'admin',
-    retry: 2
-  });
-  const { data: users, isLoading: usersLoading } = useQuery({
-    queryKey: ['admin-users'],
-    queryFn: async () => {
-      const response = await api.get('/auth/admin/users');
-      return response.data;
-    },
-    enabled: !!user && user.role === 'admin' && !!localStorage.getItem('auth_token'),
-    retry: false // Don't retry failed requests
-  });
-  const { data: orderStats } = useQuery({
-    queryKey: ['admin-order-stats'],
-    queryFn: async () => {
-      const response = await api.get('/orders/admin/stats');
-      return response.data;
-    },
-    enabled: !!user && user.role === 'admin' && !!localStorage.getItem('auth_token'),
-    retry: false
-  });
-  const { data: userStats } = useQuery({
-    queryKey: ['admin-user-stats'],
-    queryFn: async () => {
-      const response = await api.get('/auth/admin/stats');
-      return response.data;
-    },
-    enabled: !!user && user.role === 'admin' && !!localStorage.getItem('auth_token'),
-    retry: false
-  });
+  // API hooks using custom hooks
+  const { data: productsResponse, isLoading: productsLoading } = useProducts();
+  const { data: ordersResponse, isLoading: ordersLoading } = useOrders();
+  const { data: usersResponse, isLoading: usersLoading } = useUsers();
+  const { data: orderStats } = useOrderStats();
+  
+  const products = productsResponse?.data || [];
+  const orders = ordersResponse?.data || [];
+  const users = usersResponse?.data || [];
 
   // Check if user is admin
   useEffect(() => {
@@ -191,19 +164,19 @@ const AdminDashboard = () => {
   const stats = [
     { 
       title: 'Total Products', 
-      value: products?.data?.length || 0, 
+      value: products.length, 
       icon: IconPackage, 
       color: 'blue' 
     },
     { 
       title: 'Total Orders', 
-      value: orderStats?.total_orders || 0, 
+      value: orders.length, 
       icon: IconShoppingCart, 
       color: 'green' 
     },
     { 
       title: 'Total Users', 
-      value: userStats?.total_users || 0, 
+      value: users.length, 
       icon: IconUsers, 
       color: 'violet' 
     },
@@ -215,29 +188,7 @@ const AdminDashboard = () => {
     }
   ];
 
-  // Mock products if no API data
-  const mockProducts = [
-    {
-      uid: '1',
-      name: 'Organic Moringa Powder',
-      short_description: 'Pure, nutrient-rich powder',
-      category: 'powder',
-      price: 299,
-      quantity: 50,
-      is_active: true
-    },
-    {
-      uid: '2',
-      name: 'Moringa Capsules',
-      short_description: 'Convenient daily supplement',
-      category: 'capsules',
-      price: 449,
-      quantity: 30,
-      is_active: true
-    }
-  ];
-
-  const displayProducts = products?.data || mockProducts;
+  const displayProducts = products;
 
   if (!user || user.role !== 'admin') {
     return <Loader size="xl" className="h-screen flex items-center justify-center" />;
