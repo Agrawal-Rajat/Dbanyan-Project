@@ -11,7 +11,7 @@ const CompanyQuoteSection = () => {
     <section 
       className="py-20"
       style={{
-        background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1d4ed8 100%)',
+        background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)',
         position: 'relative',
         overflow: 'hidden'
       }}
@@ -40,9 +40,9 @@ const CompanyQuoteSection = () => {
             viewport={{ once: true }}
             className="mb-8"
           >
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm">
-              <IconQuote className="w-8 h-8 text-white" />
-            </div>
+                         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-100 backdrop-blur-sm">
+               <IconQuote className="w-8 h-8 text-emerald-600" />
+             </div>
           </motion.div>
 
           {/* Main Quote */}
@@ -53,17 +53,17 @@ const CompanyQuoteSection = () => {
             viewport={{ once: true }}
             className="flex flex-col items-center justify-center text-center"
           >
-            <Title 
-              order={2} 
-              className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8 leading-tight text-center"
-              style={{ 
-                fontFamily: '"Lora", serif',
-                fontStyle: 'italic',
-                textAlign: 'center',
-                width: '100%',
-                margin: '0 auto'
-              }}
-            >
+                         <Title 
+               order={2} 
+               className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-8 leading-tight text-center"
+               style={{ 
+                 fontFamily: '"Lora", serif',
+                 fontStyle: 'italic',
+                 textAlign: 'center',
+                 width: '100%',
+                 margin: '0 auto'
+               }}
+             >
               "At Dbanyan Group, we believe in the power to Moringify every life. 
               Our pure Moringa isn't just a supplement – it's a lifestyle revolution 
               that awakens your body's natural vitality and transforms wellness into a way of being."
@@ -78,18 +78,18 @@ const CompanyQuoteSection = () => {
             viewport={{ once: true }}
             className="text-center"
           >
-            <Text 
-              size="xl" 
-              className="text-emerald-100 font-medium mb-2"
-              style={{ fontFamily: '"Inter", sans-serif' }}
-            >
-              — Dbanyan Group Founders
-            </Text>
-            <Text 
-              size="lg" 
-              className="text-emerald-200/80"
-              style={{ fontFamily: '"Inter", sans-serif' }}
-            >
+                         <Text 
+               size="xl" 
+               className="text-emerald-700 font-medium mb-2"
+               style={{ fontFamily: '"Inter", sans-serif' }}
+             >
+               — Dbanyan Group Founders
+             </Text>
+             <Text 
+               size="lg" 
+               className="text-emerald-600"
+               style={{ fontFamily: '"Inter", sans-serif' }}
+             >
               Committed to Your Wellness Journey
             </Text>
           </motion.div>
@@ -102,12 +102,12 @@ const CompanyQuoteSection = () => {
             viewport={{ once: true }}
             className="mt-12 max-w-4xl mx-auto text-center flex flex-col items-center justify-center"
           >
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-              <Text 
-                size="lg" 
-                className="text-white leading-relaxed"
-                style={{ fontFamily: '"Inter", sans-serif' }}
-              >
+                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-emerald-200">
+               <Text 
+                 size="lg" 
+                 className="text-gray-700 leading-relaxed"
+                 style={{ fontFamily: '"Inter", sans-serif' }}
+               >
                 Every leaf we harvest, every product we create, and every relationship we build 
                 is guided by one simple truth: <strong>your health transformation matters</strong>. 
                 When you choose Dbanyan, you\'re not just buying Moringa – you\'re investing in 
