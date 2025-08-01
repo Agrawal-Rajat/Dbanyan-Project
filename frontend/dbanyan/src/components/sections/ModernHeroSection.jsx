@@ -85,7 +85,7 @@ const ModernHeroSection = () => {
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 backdrop-blur-sm border border-emerald-200 mb-6 mx-auto" style={{ textAlign: 'center' }}>
                 <IconLeaf className="w-4 h-4 text-emerald-600" />
                 <Text size="sm" fw={600} className="text-emerald-800" style={{ textAlign: 'center' }}>
-                  100% Pure & Natural
+                  Moringify Your Wellness
                 </Text>
               </div>
             </motion.div>
@@ -103,10 +103,10 @@ const ModernHeroSection = () => {
                   textAlign: 'center'
                 }}
               >
-                Unlock Nature's
+                Moringify Your Life
                 <br />
                 <span className="relative">
-                  Superfood
+                  Today
                   <motion.div
                     className="absolute -bottom-2 left-0 h-3 bg-emerald-200/60 rounded-full"
                     initial={{ width: 0 }}
@@ -123,9 +123,9 @@ const ModernHeroSection = () => {
                 className="text-gray-700 leading-relaxed mb-8 max-w-3xl mx-auto text-center"
                 style={{ fontFamily: 'Inter, sans-serif', textAlign: 'center' }}
               >
-                Experience the transformative power of pure Moringa. 
-                <strong className="text-emerald-700"> No preservatives, no additives</strong> – 
-                just nature's most complete superfood for your wellness journey.
+                Embrace the Moringa revolution and transform every aspect of your wellness journey. 
+                <strong className="text-emerald-700"> Experience pure vitality</strong> with nature's 
+                most complete superfood – <em>no preservatives, no compromise</em>, just life-changing nutrition.
               </Text>
             </motion.div>
 
@@ -133,9 +133,9 @@ const ModernHeroSection = () => {
             <motion.div variants={textVariants}>
               <Group gap="xl" justify="center" className="lg:justify-start mb-8">
                 {[
-                  { icon: IconShield, text: 'No Preservatives' },
-                  { icon: IconLeaf, text: '100% Organic' },
-                  { icon: IconHeart, text: 'Wellness Focused' }
+                  { icon: IconShield, text: 'Pure Moringa' },
+                  { icon: IconLeaf, text: 'Life-Changing' },
+                  { icon: IconHeart, text: 'Wellness Revolution' }
                 ].map((feature, index) => (
                   <div key={index} className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
@@ -173,7 +173,7 @@ const ModernHeroSection = () => {
                     e.target.style.boxShadow = 'none';
                   }}
                 >
-                  Shop Now
+                  Start Your Moringa Journey
                 </Button>
                 
                 <Button

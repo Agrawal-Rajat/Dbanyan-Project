@@ -249,3 +249,45 @@ async def delete_product(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to delete product: {str(e)}"
         )
+
+
+# Admin endpoints
+@router.get("/admin/all")
+async def get_all_products_admin(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    search: Optional[str] = Query(None),
+    category: Optional[ProductCategory] = None,
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
+    """Get all products for admin dashboard with search and filters"""
+    try:
+        product_service = ProductService(db)
+        return await product_service.get_all_products_admin(
+            page=page,
+            limit=limit,
+            search=search,
+            category=category
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch products: {str(e)}"
+        )
+
+
+@router.get("/admin/top")
+async def get_top_products(
+    limit: int = Query(10, le=50),
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
+    """Get top selling products for admin dashboard"""
+    try:
+        product_service = ProductService(db)
+        top_products = await product_service.get_top_products(limit)
+        return {"data": top_products}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch top products: {str(e)}"
+        )

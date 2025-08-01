@@ -11,7 +11,7 @@ const CompanyQuoteSection = () => {
     <section 
       className="py-20"
       style={{
-        background: 'linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%)',
+        background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1d4ed8 100%)',
         position: 'relative',
         overflow: 'hidden'
       }}
@@ -64,9 +64,9 @@ const CompanyQuoteSection = () => {
                 margin: '0 auto'
               }}
             >
-              "We believe that nature holds the key to vibrant health. 
-              Our mission is to bring you the purest Moringa products 
-              that don't just nourish your body, but transform your life."
+              "At Dbanyan Group, we believe in the power to Moringify every life. 
+              Our pure Moringa isn't just a supplement – it's a lifestyle revolution 
+              that awakens your body's natural vitality and transforms wellness into a way of being."
             </Title>
           </motion.div>
 

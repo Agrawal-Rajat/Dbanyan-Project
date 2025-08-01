@@ -27,7 +27,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useCartStore, useUIStore, useUserStore } from '../store';
 import { paymentService } from '../services/paymentService';
-import { 
+import BreadcrumbNav from '../components/layout/BreadcrumbNav';
+import {
   IconShoppingCart, 
   IconTruck, 
   IconCreditCard, 
@@ -245,6 +246,14 @@ const CheckoutPage = () => {
       </Helmet>
 
       <main className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50 py-8">
+        {/* Breadcrumb Navigation */}
+        <BreadcrumbNav 
+          items={[
+            { title: 'Cart', href: '/cart' },
+            { title: 'Checkout' }
+          ]} 
+        />
+        
         <Container size="xl">
           {/* Header */}
           <motion.div

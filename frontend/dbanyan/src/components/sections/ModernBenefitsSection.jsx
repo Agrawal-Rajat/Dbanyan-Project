@@ -29,51 +29,59 @@ const ModernBenefitsSection = () => {
   const benefits = [
     {
       icon: IconHeart,
-      title: "Heart Health",
-      description: "Rich in antioxidants that support cardiovascular wellness and healthy blood pressure.",
-      color: "#E57373"
+      title: "Cardiovascular Health",
+      description: "Moringa's natural compounds support heart health, help regulate blood pressure, and promote healthy circulation throughout your body.",
+      color: "#dc2626",
+      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=100&h=100&fit=crop"
     },
     {
       icon: IconBrain,
-      title: "Mental Clarity",
-      description: "Natural compounds that enhance cognitive function and mental focus.",
-      color: "#9C27B0"
+      title: "Cognitive Enhancement",
+      description: "Boost mental clarity, focus, and memory with Moringa's neuroprotective compounds that support optimal brain function.",
+      color: "#7c3aed",
+      image: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=100&h=100&fit=crop"
     },
     {
       icon: IconShield,
-      title: "Immune Support",
-      description: "Powerful immune-boosting properties with high vitamin C content.",
-      color: "#4CAF50"
+      title: "Immune Defense",
+      description: "Strengthen your body's natural defense system with powerful antioxidants and immune-boosting nutrients.",
+      color: "#059669",
+      image: "https://images.unsplash.com/photo-1576671081837-49000212a370?w=100&h=100&fit=crop"
     },
     {
       icon: IconBolt,
       title: "Natural Energy",
-      description: "Sustainable energy boost without caffeine crash or jitters.",
-      color: "#FF9800"
+      description: "Experience sustained energy without crashes. Moringa provides natural, caffeine-free vitality that lasts all day.",
+      color: "#ea580c",
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop"
     },
     {
       icon: IconLeaf,
-      title: "Anti-Inflammatory",
-      description: "Natural anti-inflammatory compounds reduce oxidative stress.",
-      color: "#2C5F2D"
+      title: "Digestive Wellness",
+      description: "Support healthy digestion and gut health with Moringa's natural fiber and digestive-friendly compounds.",
+      color: "#16a34a",
+      image: "https://images.unsplash.com/photo-1559757175-4486a5aa5d2e?w=100&h=100&fit=crop"
     },
     {
       icon: IconDroplet,
-      title: "Skin Health",
-      description: "Vitamins A, C, and E promote healthy, glowing skin from within.",
-      color: "#00BCD4"
+      title: "Hydration & Detox",
+      description: "Naturally detoxify your body while maintaining optimal hydration and supporting kidney function.",
+      color: "#0891b2",
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop"
     },
     {
       icon: IconBone,
       title: "Bone Strength",
-      description: "High calcium and phosphorus content support bone density.",
-      color: "#795548"
+      description: "Rich in calcium and phosphorus, Moringa supports strong bones and overall skeletal health.",
+      color: "#6b7280",
+      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=100&h=100&fit=crop"
     },
     {
       icon: IconEye,
-      title: "Eye Health",
-      description: "Beta-carotene and lutein support vision and eye health.",
-      color: "#3F51B5"
+      title: "Vision Support",
+      description: "High in Vitamin A and antioxidants that support healthy vision and protect against eye-related issues.",
+      color: "#7c2d12",
+      image: "https://images.unsplash.com/photo-1576671081837-49000212a370?w=100&h=100&fit=crop"
     }
   ];
 
@@ -96,23 +104,23 @@ const ModernBenefitsSection = () => {
               className="mb-4 mx-auto"
               style={{ textAlign: 'center' }}
             >
-              Health Benefits
+              Moringify Benefits
             </Badge>
             <Title 
               order={2} 
               className="text-4xl md:text-5xl font-bold text-gray-800 mb-6 text-center"
               style={{ fontFamily: 'Lora, serif', textAlign: 'center' }}
             >
-              Nature's Complete
-              <Text component="span" className="text-emerald-600"> Superfood</Text>
+              Feel the Power of
+              <Text component="span" className="text-emerald-600"> Moringification</Text>
             </Title>
             <Text 
               size="lg" 
               className="text-gray-600 max-w-3xl mx-auto leading-relaxed text-center"
               style={{ fontFamily: 'Inter, sans-serif', textAlign: 'center' }}
             >
-              Discover why Moringa is called the "Miracle Tree" - packed with 
-              over 90 nutrients, antioxidants, and bioactive compounds.
+              Experience what it means to live a Moringified life - where every nutrient, 
+              antioxidant, and bioactive compound works in harmony to elevate your wellbeing.
             </Text>
           </div>
         </motion.div>

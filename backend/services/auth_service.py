@@ -143,6 +143,25 @@ class AuthService:
         """Verify password"""
         return pwd_context.verify(plain_password, hashed_password)
     
+    async def get_current_user_from_token(self, token: str) -> Optional[User]:
+        """Get current user from JWT token"""
+        try:
+            payload = self.verify_token(token)
+            if not payload:
+                return None
+            
+            user_uid = UUID(payload.get("sub"))
+            user = await self.get_user_by_uid(user_uid)
+            
+            if not user or not user.is_active:
+                return None
+                
+            return user
+            
+        except Exception as e:
+            logger.error(f"Error getting user from token: {e}")
+            return None
+    
     async def create_admin_user(self, email: str, password: str, full_name: str) -> UserResponse:
         """Create admin user - for initial setup"""
         try:
@@ -335,3 +354,51 @@ class AuthService:
                 "verified_users": 0,
                 "verification_rate": 0
             }
+
+
+# FastAPI Dependencies
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+security = HTTPBearer()
+
+
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: AsyncIOMotorDatabase = None
+) -> User:
+    """Get current authenticated user"""
+    if not db:
+        from db import get_database
+        db = get_database()
+    
+    auth_service = AuthService(db)
+    token = credentials.credentials
+    
+    try:
+        user = await auth_service.get_current_user_from_token(token)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        return user
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+async def get_current_admin_user(
+    current_user: User = Depends(get_current_user)
+) -> User:
+    """Get current admin user"""
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+    return current_user

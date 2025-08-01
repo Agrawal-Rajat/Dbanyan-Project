@@ -162,11 +162,11 @@ async def login(
         # Generate token
         access_token = auth_service.create_access_token(user)
         
-        return {
-            "access_token": access_token,
-            "token_type": "bearer",
-            "user": UserResponse(**user.model_dump())
-        }
+        return Token(
+            access_token=access_token,
+            token_type="bearer",
+            user=user.model_dump()
+        )
         
     except HTTPException:
         raise
@@ -601,4 +601,61 @@ async def update_profile(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to update profile"
+        )
+
+
+# Admin endpoints
+@router.get("/admin/users")
+async def get_all_users(
+    page: int = 1,
+    limit: int = 10,
+    current_user: UserResponse = Depends(get_current_user),
+    auth_service: AuthService = Depends(get_auth_service)
+):
+    """Get all users (admin only)"""
+    try:
+        # Check if user is admin
+        user = await auth_service.get_user_by_uid(current_user.uid)
+        if not user or user.role != "admin":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Admin access required"
+            )
+        
+        users = await auth_service.get_all_users(page, limit)
+        return users
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch users"
+        )
+
+
+@router.get("/admin/stats")
+async def get_user_stats(
+    current_user: UserResponse = Depends(get_current_user),
+    auth_service: AuthService = Depends(get_auth_service)
+):
+    """Get user statistics (admin only)"""
+    try:
+        # Check if user is admin
+        user = await auth_service.get_user_by_uid(current_user.uid)
+        if not user or user.role != "admin":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Admin access required"
+            )
+        
+        stats = await auth_service.get_user_stats()
+        return stats
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to fetch user statistics"
         )

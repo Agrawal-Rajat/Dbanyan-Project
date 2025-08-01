@@ -24,29 +24,46 @@ const ModernMoringaSection = () => {
     {
       id: 'leaves',
       name: 'Moringa Leaves',
-      image: 'https://images.unsplash.com/photo-1609501676725-7186f660e3a5?w=400&h=300&fit=crop',
-      nutrients: 'High Fiber',
-      benefits: ['Rich in Antioxidants', 'Digestive Health', 'Natural Detox'],
-      icon: IconDroplet,
-      color: '#059669'
+      image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&h=300&fit=crop',
+      nutrients: 'Vitamin C, Iron, Protein',
+      description: 'The powerhouse of nutrition, Moringa leaves contain 7x more Vitamin C than oranges, 4x more calcium than milk, and 3x more potassium than bananas. These nutrient-dense leaves are the foundation of a Moringified lifestyle.',
+      benefits: ['Boosts Immunity', 'Supports Energy Levels', 'Enhances Mental Clarity', 'Promotes Healthy Skin', 'Aids Digestion'],
+      icon: IconLeaf,
+      color: '#059669',
+      nutritionFacts: { vitaminC: '220mg', iron: '28mg', protein: '27g', calcium: '2000mg' }
     },
     {
       id: 'seeds',
       name: 'Moringa Seeds',
-      image: 'https://images.unsplash.com/photo-1628348070889-cb656235b4eb?w=400&h=300&fit=crop',
-      nutrients: 'Healthy Oils',
-      benefits: ['Heart Health', 'Skin Nourishment', 'Anti-inflammatory'],
+      image: 'https://images.unsplash.com/photo-1518843875459-f738682238a6?w=400&h=300&fit=crop',
+      nutrients: 'Healthy Oils, Vitamin E',
+      description: 'Moringa seeds are nature\'s water purifiers and health enhancers. Rich in healthy monounsaturated fats and powerful antioxidants, they support cardiovascular health and provide sustained energy throughout your day.',
+      benefits: ['Heart Health Support', 'Natural Water Purification', 'Anti-inflammatory Properties', 'Skin Rejuvenation', 'Blood Sugar Regulation'],
+      icon: IconDroplet,
+      color: '#047857',
+      nutritionFacts: { vitaminE: '15mg', healthyFats: '35g', fiber: '8g', antioxidants: 'High' }
+    },
+    {
+      id: 'pods',
+      name: 'Moringa Pods',
+      image: 'https://images.unsplash.com/photo-1573246123716-6b1782bfc499?w=400&h=300&fit=crop',
+      nutrients: 'Vitamins A, B, K',
+      description: 'Known as "drumsticks" in many cultures, Moringa pods are culinary treasures packed with essential vitamins and minerals. They offer a unique way to incorporate the Moringa benefits into your daily meals.',
+      benefits: ['Rich in Vitamin K', 'Supports Bone Health', 'Aids in Blood Clotting', 'Boosts Metabolism', 'Enhances Flavor'],
       icon: IconFlame,
-      color: '#047857'
+      color: '#065f46',
+      nutritionFacts: { vitaminK: '180mcg', vitaminA: '2000IU', folate: '40mcg', magnesium: '147mg' }
     },
     {
       id: 'roots',
       name: 'Moringa Roots',
-      image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop',
-      nutrients: 'Medicinal',
-      benefits: ['Traditional Medicine', 'Immune Support', 'Natural Healing'],
+      image: 'https://images.unsplash.com/photo-1594736797933-d0c65ae8fe55?w=400&h=300&fit=crop',
+      nutrients: 'Medicinal Compounds',
+      description: 'The roots of the Moringa tree have been used in traditional medicine for centuries. Rich in bioactive compounds, they represent the ancient wisdom of natural healing and holistic wellness.',
+      benefits: ['Traditional Medicine', 'Natural Healing Properties', 'Digestive Support', 'Anti-bacterial Effects', 'Immune System Boost'],
       icon: IconShield,
-      color: '#065f46'
+      color: '#0d9488',
+      nutritionFacts: { alkaloids: 'Present', flavonoids: 'High', saponins: 'Active', tannins: 'Beneficial' }
     }
   ];
 
@@ -118,7 +135,7 @@ const ModernMoringaSection = () => {
               }}
             >
               <IconLeaf className="w-4 h-4 mr-2" />
-              THE MIRACLE TREE
+              MORINGIFY YOUR WORLD
             </Badge>
             <Title 
               order={2} 
@@ -131,17 +148,17 @@ const ModernMoringaSection = () => {
                 textAlign: 'center'
               }}
             >
-              Your Life-Changing Journey Starts Here
+              Join the Moringification Revolution
             </Title>
             <Text 
               size="xl" 
               className="text-gray-600 max-w-3xl mx-auto leading-relaxed text-center"
               style={{ fontFamily: 'Inter, sans-serif', textAlign: 'center' }}
             >
-              Imagine waking up every morning with boundless energy, crystal-clear focus, and 
-              unshakeable vitality. This isn't just a dream – it's the reality thousands have 
-              discovered through the transformative power of pure Moringa. Every part of this 
-              miraculous tree holds the potential to revolutionize your health story.
+              Ready to Moringify your life? Thousands have already discovered how this ancient 
+              superfood transforms ordinary days into extraordinary wellness experiences. 
+              Every leaf, seed, and root contains nature's blueprint for optimal health, 
+              waiting to revolutionize your vitality from the inside out.
             </Text>
           </div>
         </motion.div>

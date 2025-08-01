@@ -98,13 +98,13 @@ class ProductService:
             pages = (total + per_page - 1) // per_page
             
             return PaginatedResponse(
-                success=True,
-                message="Products retrieved successfully",
-                data=products,
+                items=products,
                 total=total,
                 page=page,
                 per_page=per_page,
-                pages=pages
+                pages=pages,
+                has_prev=page > 1,
+                has_next=page < pages
             )
             
         except Exception as e:
@@ -276,13 +276,13 @@ class ProductService:
             pages = (total + per_page - 1) // per_page
             
             return PaginatedResponse(
-                success=True,
-                message="Search results retrieved successfully",
-                data=products,
+                items=products,
                 total=total,
                 page=page,
                 per_page=per_page,
-                pages=pages
+                pages=pages,
+                has_prev=page > 1,
+                has_next=page < pages
             )
             
         except Exception as e:
@@ -307,4 +307,73 @@ class ProductService:
             
         except Exception as e:
             logger.error(f"Error fetching featured products: {e}")
+            raise
+
+    async def get_all_products_admin(self, page: int = 1, limit: int = 10, search: Optional[str] = None, category: Optional[ProductCategory] = None) -> Dict[str, Any]:
+        """Get all products for admin dashboard with pagination and filters"""
+        try:
+            skip = (page - 1) * limit
+            
+            # Build filter query
+            filter_query = {}
+            if search:
+                filter_query["$or"] = [
+                    {"name": {"$regex": search, "$options": "i"}},
+                    {"description": {"$regex": search, "$options": "i"}},
+                    {"short_description": {"$regex": search, "$options": "i"}}
+                ]
+            if category:
+                filter_query["category"] = category.value
+            
+            # Get total count
+            total = await self.collection.count_documents(filter_query)
+            
+            # Get products with pagination
+            cursor = self.collection.find(filter_query).skip(skip).limit(limit).sort("created_at", -1)
+            products_docs = await cursor.to_list(length=limit)
+            
+            products = []
+            for doc in products_docs:
+                doc['uid'] = UUID(doc['uid'])
+                products.append(Product(**doc))
+            
+            total_pages = (total + limit - 1) // limit
+            
+            return {
+                "data": products,
+                "total": total,
+                "page": page,
+                "limit": limit,
+                "total_pages": total_pages
+            }
+            
+        except Exception as e:
+            logger.error(f"Error fetching admin products: {e}")
+            raise
+
+    async def get_top_products(self, limit: int = 10) -> List[Dict[str, Any]]:
+        """Get top selling products for admin dashboard"""
+        try:
+            # Sort by sales count and views
+            cursor = self.collection.find(
+                {"is_active": True}
+            ).sort([("sales_count", -1), ("views", -1)]).limit(limit)
+            
+            products_docs = await cursor.to_list(length=limit)
+            
+            top_products = []
+            for doc in products_docs:
+                top_products.append({
+                    "uid": doc["uid"],
+                    "name": doc["name"],
+                    "price": doc["price"],
+                    "sales_count": doc.get("sales_count", 0),
+                    "views": doc.get("views", 0),
+                    "revenue": doc.get("sales_count", 0) * doc["price"]
+                })
+            
+            return top_products
+            
+        except Exception as e:
+            logger.error(f"Error fetching top products: {e}")
             raise

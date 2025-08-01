@@ -46,7 +46,6 @@ import { useUserStore } from '../store';
 import { useProducts } from '../hooks/useProducts';
 import { api } from '../services/api';
 import { useQuery } from '@tanstack/react-query';
-import ModernNavBar from '../components/layout/ModernNavBar';
 import ProductManagement from '../components/admin/ProductManagement';
 import OrderManagement from '../components/admin/OrderManagement';
 import UserManagement from '../components/admin/UserManagement';
@@ -251,7 +250,7 @@ const AdminDashboard = () => {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
-      <ModernNavBar />
+
 
       <Box className="min-h-screen bg-gray-50">
         {/* Header */}

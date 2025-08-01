@@ -25,6 +25,7 @@ import {
   IconHome,
   IconShoppingBag
 } from '@tabler/icons-react';
+import BreadcrumbNav from '../components/layout/BreadcrumbNav';
 
 const OrderSuccessPage = () => {
   const navigate = useNavigate();
@@ -39,6 +40,15 @@ const OrderSuccessPage = () => {
       </Helmet>
 
       <main className="min-h-screen bg-gradient-to-br from-green-50 to-white py-16">
+        {/* Breadcrumb Navigation */}
+        <BreadcrumbNav 
+          items={[
+            { title: 'Cart', href: '/cart' },
+            { title: 'Checkout', href: '/checkout' },
+            { title: 'Order Confirmed' }
+          ]} 
+        />
+        
         <Container size="md">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
